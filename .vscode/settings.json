@@ -1,0 +1,4 @@
+{
+    "dotnet.defaultSolution": "LoxSharp.sln",
+    "cmake.configureOnOpen": false
+}
