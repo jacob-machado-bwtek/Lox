@@ -1,14 +1,19 @@
-﻿namespace CraftingInterpreters.CSLox;
+﻿namespace CraftingInterpreters.LoxSharp;
 
 
 using System;
 using System.IO;
+using System.Runtime.InteropServices;
+using System.Security.Principal;
 using System.Text;
+using global::LoxSharp;
 
 public class Lox{
+    private static bool hadError;
+
     public static void Main(string[] args) {
         if(args.Length > 1){
-            Console.WriteLine("Usage: CSLox[Script]");
+            Console.WriteLine("Usage: LoxSharp[Script]");
             Environment.Exit(64);
         } else if (args.Length == 1){
             RunFile(args[0]);
@@ -21,6 +26,7 @@ public class Lox{
     {
         Console.InputEncoding = Encoding.Default;
         Console.OutputEncoding = Encoding.Default;
+            Console.WriteLine("Entering LoxSharp");
 
         while (true)
         {
@@ -34,11 +40,32 @@ public class Lox{
     {
         string content = File.ReadAllText(path, Encoding.Default);
         Run(content);
+
+        if(hadError){
+            Environment.Exit(65);
+        }
     }
 
     private static void Run(string input)
     {
-        Console.WriteLine($"Running: {input}");
-        
+        IScanner scanner = new DummyScanner(input);
+
+        List<Token> tokens = scanner.scanTokens();
+
+        foreach(var t in tokens){
+            Console.WriteLine(t);
+        }
+    }
+
+    public static void error(int line, string message){
+        report(line, message, "");
+    }
+
+    private static void report(int line, string message, string where)
+    {
+        TextWriter errorWriter = Console.Error;
+        errorWriter.WriteLine($"[line {line}] Error {where} : {message}");
+
+        hadError = true;
     }
 }
