@@ -5,5 +5,5 @@ namespace LoxSharp
     }
     
 
-    public class Token : IToken {}
+    public class DummyToken : IToken {}
 }

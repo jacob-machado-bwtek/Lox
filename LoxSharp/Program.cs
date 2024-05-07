@@ -34,6 +34,7 @@ public class Lox{
             string? line = Console.ReadLine();
             if (line == null) break;
             Run(line);
+            hadError = false;
         }
     }
     private static void RunFile(string path)
@@ -50,7 +51,7 @@ public class Lox{
     {
         IScanner scanner = new DummyScanner(input);
 
-        List<Token> tokens = scanner.scanTokens();
+        List<IToken> tokens = scanner.scanTokens();
 
         foreach(var t in tokens){
             Console.WriteLine(t);

@@ -2,7 +2,11 @@ namespace LoxSharp
 {
     public interface IScanner {
        
-       public List<Token> scanTokens();
+       /// <summary>
+       /// Scans the inputted string
+       /// </summary>
+       /// <returns>A list of tokens</returns>
+       public List<IToken> scanTokens();
     }
 
     public class DummyScanner : IScanner{
@@ -10,8 +14,12 @@ namespace LoxSharp
 
         }
 
-        public List<Token> scanTokens(){
-            return new List<Token>();
+        /// <summary>
+        /// Scans the inputted string
+        /// </summary>
+        /// <returns>an empty list of Dummy Tokens</returns>
+        public List<IToken> scanTokens(){
+            return new List<IToken>();
         }
     }
     
