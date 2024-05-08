@@ -93,6 +93,18 @@ namespace LoxSharp
                             advance();
                         }
                     }
+                    //handle block comments
+                    if(Match('*')){
+                        bool endComment = (Peek() == '*' && peekNext() == '/');
+                        while(!endComment&& !IsAtEnd){
+                            endComment = (Peek() == '*' && peekNext() == '/');
+                            if(Peek() == '\n'){
+                                line++;
+                            }
+                            advance();
+                        } 
+
+                    }
                     else{
                         AddToken(TokenType.SLASH);
                     }
@@ -197,7 +209,7 @@ namespace LoxSharp
         {
             if(IsAtEnd) return false;
 
-            if(source.ElementAt(current) != expected) return false;
+            if(source.ElementAt(current) != expected) return false; 
 
             current++;
             return true;
