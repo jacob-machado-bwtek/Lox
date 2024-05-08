@@ -1,3 +1,5 @@
+using System.ComponentModel.DataAnnotations;
+using System.Data;
 using System.Globalization;
 using CraftingInterpreters.LoxSharp;
 
@@ -29,6 +31,7 @@ namespace LoxSharp
     public class Scanner : IScanner {
         private readonly string source;
         private readonly List<IToken> tokens = new List<IToken>();
+
 
         private int start = 0;
         private int current = 0;
@@ -104,11 +107,11 @@ namespace LoxSharp
 
 
                 default: 
-                    if(char.IsAsciiDigit(c)){
+                    if(char.IsLetter(c)){
                         number();
                     }
-                    else if(char.IsAsciiLetter(c)){
-
+                    else if(char.IsLetter(c) || c=='_'){
+                        Identifier();
                     }
                     else{
                         Lox.error(line, "Unexpected Character"); 
@@ -118,16 +121,32 @@ namespace LoxSharp
             }
         }
 
-        private void number()
+        private void Identifier()
         {
-            while(char.IsAsciiDigit(Peek())){
+            while(char.IsLetterOrDigit(Peek()) || Peek() == '_'){
                 advance();
             }
-            if(Peek() == '.' && char.IsAsciiDigit(peekNext())){
+            string text = source.Substring(start, current-start);
+            TokenType type;
+            
+            bool hit = LoxKeywords.KeywordsDict.TryGetValue(text, out type);
+
+            if(!hit){
+                type = TokenType.IDENTIFIER;
+            }
+            AddToken(type);
+        }
+
+        private void number()
+        {
+            while(char.IsDigit(Peek())){
+                advance();
+            }
+            if(Peek() == '.' && char.IsDigit(peekNext())){
 
                 advance();
 
-                while(char.IsAsciiDigit(Peek())){
+                while(char.IsDigit(Peek())){
                     advance();
                 }
             }
