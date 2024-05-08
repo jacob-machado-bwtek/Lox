@@ -1,7 +1,4 @@
-
-
-
-using System.Text.RegularExpressions;
+using System.Globalization;
 using CraftingInterpreters.LoxSharp;
 
 namespace LoxSharp
@@ -57,6 +54,8 @@ namespace LoxSharp
             char c = advance();
 
             switch(c){
+
+                //single character operators
                 case '(': AddToken(TokenType.LEFT_PAREN);  break;
                 case ')': AddToken(TokenType.RIGHT_PAREN); break;
                 case '{': AddToken(TokenType.LEFT_BRACE);  break;
@@ -68,14 +67,26 @@ namespace LoxSharp
                 case ';': AddToken(TokenType.SEMICOLON);   break;
                 case '*': AddToken(TokenType.STAR);        break;
 
+                //two character operators
                 case '!': AddToken(Match('=') ? TokenType.BANG_EQUAL : TokenType.BANG);       break;
                 case '=': AddToken(Match('=') ? TokenType.EQUAL_EQUAL : TokenType.EQUAL);     break;
                 case '<': AddToken(Match('=') ? TokenType.LESS_EQUAL : TokenType.LESS);       break;
                 case '>': AddToken(Match('=') ? TokenType.GREATER_EQUAL : TokenType.GREATER); break;
 
+                //whitespace
+                case ' ':
+                case '\t':
+                case '\r':
+                
+                break;
+
+
+                //newline
+                case '\n': line++; break;
+
                 case '/':
                     if(Match('/')){
-                        while(peek() != '\n' && !IsAtEnd){
+                        while(Peek() != '\n' && !IsAtEnd){
                             advance();
                         }
                     }
@@ -86,12 +97,77 @@ namespace LoxSharp
                 break;
 
 
-                default: Lox.error(line, "Unexpected Character"); break;
+
+
+                case '"': StringHandler(); break;
+
+
+
+                default: 
+                    if(char.IsAsciiDigit(c)){
+                        number();
+                    }
+                    else if(char.IsAsciiLetter(c)){
+
+                    }
+                    else{
+                        Lox.error(line, "Unexpected Character"); 
+                    }
+                break;
 
             }
         }
 
-        private char peek()
+        private void number()
+        {
+            while(char.IsAsciiDigit(Peek())){
+                advance();
+            }
+            if(Peek() == '.' && char.IsAsciiDigit(peekNext())){
+
+                advance();
+
+                while(char.IsAsciiDigit(Peek())){
+                    advance();
+                }
+            }
+
+            double x = Double.Parse(source.Substring(start, current-start));
+            AddToken(TokenType.NUMBER, x);
+
+        }
+
+        private char peekNext()
+        {
+            if(current +1 >= source.Length){
+                return '\0';
+            }
+            return source.ElementAt(current+1);
+        }
+
+        private void StringHandler()
+        {
+            while(Peek() != '"' && !IsAtEnd){
+                if(Peek() == '\n'){
+                    line++;
+                }
+                advance();
+            }
+
+            if(IsAtEnd){
+                //TODO: remember starting position of unterminated string for debugging
+                Lox.error(line, "Unterminated String");
+                return;
+            }
+
+            advance();
+
+            String value = source.Substring(start+1,current-start-1);
+            AddToken(TokenType.STRING,value);
+            
+        }
+
+        private char Peek()
         {
             if(IsAtEnd) return '\0';
             return source.ElementAt(current);
@@ -120,7 +196,7 @@ namespace LoxSharp
 
         private void AddToken(TokenType type, object? value)
         {
-            String text = source.Substring(start,current);
+            String text = source.Substring(start,current-start);
             tokens.Add(new Token(type,text,value,line));
         }
     }
