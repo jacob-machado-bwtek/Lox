@@ -32,16 +32,32 @@ namespace LoxSharp.Tools;
         writer.WriteLine("\n \n");
         writer.WriteLine($"abstract class {baseName} {{");
 
+        defineVisitor(writer,baseName,types);
+
         foreach (string type in types){
             string className = type.Split(':')[0].Trim();
             string fields = type.Split(':')[1].Trim();
             defineType(writer,baseName, className, fields);
         }
 
+        writer.WriteLine();
+        writer.WriteLine("public abstract R accept<R>(Visitor<R> visitor);");
+
         writer.WriteLine("}");
 
         writer.Close();
 
+    }
+
+    private static void defineVisitor(TextWriter writer, string baseName, List<string> types)
+    {
+        writer.WriteLine("public interface Visitor<R>{");
+        foreach (string type in types) {
+            string typeName = type.Split(':')[0].Trim();
+            writer.WriteLine($"\t\tR visit{typeName}{baseName}({typeName} {baseName.ToLower()});");
+        }
+
+        writer.WriteLine("}");
     }
 
     private static void defineType(TextWriter writer, string baseName, string className, string fieldList)
@@ -57,14 +73,18 @@ namespace LoxSharp.Tools;
         //put each param in field
         foreach(string field in fields){
             string name = field.Split(" ")[1];
-            writer.WriteLine($"this.{name} = {name};");
+            writer.WriteLine($"\t\tthis.{name} = {name};");
         }
 
-        writer.WriteLine("}");
+        writer.WriteLine("\t}");
+
+        writer.WriteLine();
+        writer.WriteLine("public override  R accept<R>(Visitor<R> visitor) {");
+        writer.WriteLine($"\t\t\t return visitor.visit{className}{baseName}(this);");
+        writer.WriteLine("\t\t }");
+
 
         //make the fields
-
-
         writer.WriteLine("\n");
 
         foreach (string field in fields){
