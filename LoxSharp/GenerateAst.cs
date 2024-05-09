@@ -3,18 +3,18 @@ using System.Text;
 namespace LoxSharp.Tools;
 
  public class GenerateAst{
-    public static void Main(string[] args){
-        if (args.Length != 1){
-            Console.Error.WriteLine("Usage: Generate_ast <output directory>");
+    public static void GenerateAstMain(string[] args){
+        if (args.Length != 2){
+            Console.Error.WriteLine("Usage: loxsharp -generate-ast <output directory>");
             Environment.Exit(64);
         }
-        string outputDir = args[0];
+        string outputDir = args[1];
 
         List<string> types = new List<string>{
-            "Binary : Expr left, Token Op, Expr right",
+            "Binary : Expr left,Token Op,Expr right",
             "Grouping : Expr expression",
             "Literal : Object value",
-            "Unary : Token op, Expr right",
+            "Unary : Token op,Expr right",
         };
 
 
@@ -27,6 +27,7 @@ namespace LoxSharp.Tools;
 
         TextWriter writer = new StreamWriter(path,false,Encoding.UTF8);
         
+
         writer.WriteLine("namespace LoxSharp;");
         writer.WriteLine("\n \n");
         writer.WriteLine($"abstract class {baseName} {{");
@@ -67,8 +68,10 @@ namespace LoxSharp.Tools;
         writer.WriteLine("\n");
 
         foreach (string field in fields){
-            writer.WriteLine($"public {field} {{ get; }}");
+            writer.WriteLine($"\t public {field} {{ get; }}");
         }
+
+        writer.WriteLine("}");
 
     }
 }

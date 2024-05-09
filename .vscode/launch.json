@@ -21,14 +21,6 @@
             "args": ["${workspaceFolder}/inputs/input.txt"], 
              
         },
-        {
-            "type":"coreclr",
-            "request": "launch",
-            "name": "GenerateAst",
-            "program": "${workspaceFolder}/LoxSharp/bin/Debug/net8.0/LoxSharp.dll",
-            "args": ["${workspaceFolder}/LoxSharp"], 
-             
-        }
 
     ]
 }
