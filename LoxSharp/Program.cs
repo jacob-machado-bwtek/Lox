@@ -1,4 +1,4 @@
-﻿namespace CraftingInterpreters.LoxSharp;
+﻿namespace LoxSharp;
 
 
 using System;
@@ -7,11 +7,15 @@ using System.Runtime.InteropServices;
 using System.Security.Principal;
 using System.Text;
 using global::LoxSharp;
+using LoxSharp.Tools;
 
 public class Lox{
     private static bool hadError;
 
     public static void Main(string[] args) {
+                Console.WriteLine("running...");
+
+        /*
         if(args.Length > 1){
             Console.WriteLine("Usage: LoxSharp[Script]");
             Environment.Exit(64);
@@ -19,7 +23,9 @@ public class Lox{
             RunFile(args[0]);
         }else{
             RunPrompt();
-        }
+        }*/
+        Console.WriteLine("entering generateAst");
+        GenerateAst.Main(args);
     }
 
  private static void RunPrompt()
