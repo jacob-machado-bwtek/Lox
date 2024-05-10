@@ -30,7 +30,7 @@ namespace LoxSharp.Tools;
 
         writer.WriteLine("namespace LoxSharp;");
         writer.WriteLine("\n \n");
-        writer.WriteLine($"abstract class {baseName} {{");
+        writer.WriteLine($"public abstract class {baseName} {{");
 
         defineVisitor(writer,baseName,types);
 

@@ -22,7 +22,7 @@ public class Lox{
                 }
             }
             else{
-                Console.WriteLine("Usage: LoxSharp[Script]");
+                            Console.WriteLine("Usage: LoxSharp[Script]");
             }
             Environment.Exit(64);
         } else if (args.Length == 1){
@@ -31,6 +31,7 @@ public class Lox{
             RunPrompt();
         }
 
+        
     }
 
  private static void RunPrompt()
