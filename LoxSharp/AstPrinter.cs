@@ -23,7 +23,7 @@ public class AstPrinter : Expr.Visitor<string>{
         if(expr.value == null){
             return "nil";
         }
-        return expr.value.ToString();
+        return expr.value.ToString() ?? "nil";
     }
 
     public string visitUnaryExpr(Expr.Unary expr)
