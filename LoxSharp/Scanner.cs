@@ -11,7 +11,7 @@ public interface IScanner {
    /// Scans the inputted string
    /// </summary>
    /// <returns>A list of tokens</returns>
-   public List<IToken> scanTokens();
+   public List<Token> scanTokens();
 }
 
 public class DummyScanner : IScanner{
@@ -23,14 +23,14 @@ public class DummyScanner : IScanner{
     /// Scans the inputted string
     /// </summary>
     /// <returns>an empty list of Dummy Tokens</returns>
-    public List<IToken> scanTokens(){
-        return new List<IToken>();
+    public List<Token> scanTokens(){
+        return new List<Token>();
     }
 }
 
 public class Scanner : IScanner {
     private readonly string source;
-    private readonly List<IToken> tokens = new List<IToken>();
+    private readonly List<Token> tokens = new List<Token>();
 
 
     private int start = 0;
@@ -43,7 +43,7 @@ public class Scanner : IScanner {
         source = input;
     } 
 
-    public List<IToken> scanTokens(){
+    public List<Token> scanTokens(){
         while(!IsAtEnd){
             start = current;
             scanToken(); 

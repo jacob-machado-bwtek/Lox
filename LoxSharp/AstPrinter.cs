@@ -4,7 +4,7 @@ using System.Text;
 namespace LoxSharp;
 
 public class AstPrinter : Expr.Visitor<string>{
-    public string print(Expr expr) {
+    public string Print(Expr expr) {
         return expr.accept(this);
     }
 

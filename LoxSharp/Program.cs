@@ -62,12 +62,17 @@ public class Lox{
     private static void Run(string input)
     {
         IScanner scanner = new DummyScanner(input);
+        List<Token> tokens = scanner.scanTokens();
+        Parser parser = new Parser(tokens);
 
-        List<IToken> tokens = scanner.scanTokens();
+        Expr expression = parser.Parse();
 
-        foreach(var t in tokens){
-            Console.WriteLine(t);
+        if(hadError){
+            return;
         }
+        
+
+        Console.WriteLine(new AstPrinter().Print(expression));
     }
 
     public static void Error(int line, string message){
