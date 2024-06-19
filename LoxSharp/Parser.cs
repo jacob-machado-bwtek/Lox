@@ -12,6 +12,15 @@ public partial class Parser{
     private int current = 0;
     private bool IsAtEnd{get{return Peek().type == TokenType.EOF;}}
 
+
+    public Expr Parse(){
+        try{
+            return Expression();
+        }catch(ParseError e){
+            return null;
+        }
+    }
+
     private Token Peek()
     {
         return tokens.ElementAt(current);
@@ -158,5 +167,31 @@ public partial class Parser{
             return false;
         }
         return Peek().type == t;
+    }
+
+    private void Synchronize(){
+        Advance(); 
+
+        while(!IsAtEnd){
+            if(Previous().type == TokenType.SEMICOLON){
+                return;
+            }
+
+            switch(Peek().type) {
+
+                case TokenType.CLASS:
+                case TokenType.FUN:
+                case TokenType.VAR:
+                case TokenType.FOR:
+                case TokenType.WHILE:
+                case TokenType.IF:
+                case TokenType.PRINT:
+                case TokenType.RETURN:
+
+                return;
+            }
+
+            Advance();
+        }
     }
 }
