@@ -1,8 +1,12 @@
 
 
+using System.Diagnostics.CodeAnalysis;
+using System.Reflection;
+using System.Text.RegularExpressions;
+
 namespace LoxSharp;
 
-public class Parser{
+public partial class Parser{
     private List<Token> tokens;
 
     private int current = 0;
@@ -23,12 +27,12 @@ public class Parser{
 
     private Expr Equality()
     {
-        Expr expr = ExprComparison();
+        Expr expr = Comparison();
 
 
         while(Match(TokenType.BANG_EQUAL,TokenType.EQUAL_EQUAL)){
             Token op = Previous();
-            Expr right = ExprComparison();
+            Expr right = Comparison();
             expr = new Expr.Binary(expr, op, right);
         }
 
@@ -37,12 +41,95 @@ public class Parser{
 
     private Token Previous()
     {
-        return tokens.ElementAt(current);
+        return tokens.ElementAt(current -1);
     }
 
-    private Expr ExprComparison()
+    private Expr Comparison()
     {
-        throw new NotImplementedException();
+        Expr expr = Term();
+
+        while(Match(TokenType.GREATER,TokenType.GREATER_EQUAL,TokenType.LESS, TokenType.LESS_EQUAL)){
+            Token op = Previous();
+            Expr right = Term();
+            expr = new Expr.Binary(expr, op, right);
+
+        }
+
+        return expr;
+    }
+
+    private Expr Term()
+    {
+        Expr expr = Factor();
+
+        while(Match(TokenType.MINUS,TokenType.PLUS)){
+            Token op = Previous();
+            Expr right = Factor();
+            expr = new Expr.Binary(expr, op, right);
+
+        }
+        return expr;
+    }
+
+    private Expr Factor()
+    {
+       Expr expr = Unary();
+        while(Match(TokenType.SLASH,TokenType.STAR)){
+            Token op = Previous();
+            Expr right = Unary();
+            expr = new Expr.Binary(expr, op, right);
+        }
+
+       return expr;
+    }
+
+    private Expr Unary()
+    {
+        if(Match(TokenType.BANG, TokenType.MINUS)){
+            Token op = Previous();
+            Expr right = Unary();
+            return new Expr.Unary(op, right);
+        }
+
+        return Primary();
+    }
+
+    private Expr Primary()
+    {
+        if(Match(TokenType.FALSE)){
+            return new Expr.Literal(false);
+        }
+        if(Match(TokenType.TRUE)){
+            return new Expr.Literal(true);
+        }
+        if(Match(TokenType.NIL)){
+            return new Expr.Literal(null);
+        }
+
+        if(Match(TokenType.NUMBER,TokenType.STRING)){
+            return new Expr.Literal(Previous().literal);
+        }
+
+        if(Match(TokenType.LEFT_PAREN)){
+            Expr expr = Expression();
+            Consume(TokenType.RIGHT_PAREN, "Expect ')' after expression");
+            return new Expr.Grouping(expr);
+        }
+
+           throw Error(Peek(), "Expect expression.");
+    }
+
+    private Token Consume(TokenType type, string message)
+    {
+        if(Check(type)){
+            return Advance();
+        }
+        throw Error(Peek(), message);
+    }
+
+    private ParseError Error(Token token, string message){
+        Lox.Error(token, message);
+        return new ParseError();
     }
 
     private bool Match(params TokenType[] tokens)

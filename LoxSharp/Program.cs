@@ -70,11 +70,21 @@ public class Lox{
         }
     }
 
-    public static void error(int line, string message){
-        report(line, message, "");
+    public static void Error(int line, string message){
+        Report(line, message, "");
     }
 
-    private static void report(int line, string message, string where)
+    public static void Error(Token token, string message){
+        if(token.type == TokenType.EOF){
+            Report(token.line, "at end", message);
+        }
+        else{
+            Report(token.line, $"at '{token.lexeme}'", message);
+        }
+
+    }
+
+    private static void Report(int line, string message, string where)
     {
         TextWriter errorWriter = Console.Error;
         errorWriter.WriteLine($"[line {line}] Error {where} : {message}");

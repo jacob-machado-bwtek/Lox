@@ -126,7 +126,7 @@ public class Scanner : IScanner {
                     Identifier();
                 }
                 else{
-                    Lox.error(line, "Unexpected Character"); 
+                    Lox.Error(line, "Unexpected Character"); 
                 }
             break;
 
@@ -187,7 +187,7 @@ public class Scanner : IScanner {
 
         if(IsAtEnd){
             //TODO: remember starting position of unterminated string for debugging
-            Lox.error(line, "Unterminated String");
+            Lox.Error(line, "Unterminated String");
             return;
         }
 
