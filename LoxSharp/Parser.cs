@@ -8,7 +8,7 @@ using System.Text.RegularExpressions;
 namespace LoxSharp;
 
 public partial class Parser{
-    private List<Token> tokens;
+    private List<Token> tokens = new();
 
     private int current = 0;
     private bool IsAtEnd{get{return Peek().type == TokenType.EOF;}}
@@ -17,7 +17,7 @@ public partial class Parser{
     public Expr Parse(){
         try{
             return Expression();
-        }catch(ParseError e){
+        }catch(ParseError){
             return null;
         }
     }
@@ -28,7 +28,10 @@ public partial class Parser{
     }
 
     public Parser(List<Token> tokens){
-        this.tokens = tokens;
+        
+        //avoiding funny business by doing it this way
+        this.tokens.AddRange(tokens);
+        //this.tokens = tokens;
     }
 
     private Expr Expression(){
@@ -117,10 +120,6 @@ public partial class Parser{
             Expr right = Unary();
             return new Expr.Unary(op, right);
         }
-        else if(Match(TokenType.PLUS,TokenType.SLASH, TokenType.STAR, TokenType.COMMA, TokenType.EQUAL_EQUAL,
-                    TokenType.BANG_EQUAL, TokenType.LESS, TokenType.LESS_EQUAL, TokenType.GREATER, TokenType.GREATER_EQUAL)){
-                throw Error(Previous(),"Invalid Unary Operator");
-                }
 
         return Primary();
     }

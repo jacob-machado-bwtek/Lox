@@ -67,7 +67,7 @@ public class Lox{
 
     private static void Run(string input)
     {
-        IScanner scanner = new DummyScanner(input);
+        IScanner scanner = new Scanner(input);
         List<Token> tokens = scanner.scanTokens();
         Parser parser = new Parser(tokens);
 

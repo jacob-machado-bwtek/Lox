@@ -92,7 +92,7 @@ public class Interpreter : Expr.Visitor<Object> {
                     return left.ToString() + (string)right;
                 }
 
-                //throw new RuntimeError(expr.Op, "operands must be two numbers or two strings");
+                //throw new R`timeError(expr.Op, "operands must be two numbers or two strings");
                 break;
                 
                 

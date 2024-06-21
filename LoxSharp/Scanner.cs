@@ -87,6 +87,7 @@ public class Scanner : IScanner {
             //newline
             case '\n': line++; break;
 
+            //comment and slash handler
             case '/':
                 if(Match('/')){
                     while(Peek() != '\n' && !IsAtEnd){
@@ -119,14 +120,14 @@ public class Scanner : IScanner {
 
 
             default: 
-                if(char.IsLetter(c)){
-                    number();
+                if(char.IsDigit(c)){
+                    Number();
                 }
                 else if(char.IsLetter(c) || c=='_'){
                     Identifier();
                 }
                 else{
-                    Lox.Error(line, "Unexpected Character"); 
+                    Lox.Error(line, "Scanner: Unexpected Character"); 
                 }
             break;
 
@@ -149,7 +150,7 @@ public class Scanner : IScanner {
         AddToken(type);
     }
 
-    private void number()
+    private void Number()
     {
         while(char.IsDigit(Peek())){
             advance();
@@ -193,7 +194,7 @@ public class Scanner : IScanner {
 
         advance();
 
-        String value = source.Substring(start+1,current-start-1);
+        String value = source.Substring(start+1,current - start - 2);
         AddToken(TokenType.STRING,value);
         
     }
