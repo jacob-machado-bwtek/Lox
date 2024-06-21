@@ -15,10 +15,12 @@ namespace LoxSharp.Tools;
             "Grouping : Expr expression",
             "Literal : Object value",
             "Unary : Token op,Expr right",
+            "Expression : Expr expression",
+            "Print : Expr expression "
         };
 
 
-        DefineAst(outputDir, "Expr", types);
+        DefineAst(outputDir, "Stmt", types);
     }
 
     private static void DefineAst(string outputDir, string baseName, List<string> types)
