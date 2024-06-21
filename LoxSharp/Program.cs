@@ -10,7 +10,10 @@ using global::LoxSharp;
 using LoxSharp.Tools;
 
 public class Lox{
-    private static bool hadError;
+    private static bool hadError = false;
+    private static bool hadRuntimeError = false;
+
+    private static readonly Interpreter myInterpreter = new Interpreter();
 
     public static void Main(string[] args) {
         
@@ -57,6 +60,9 @@ public class Lox{
         if(hadError){
             Environment.Exit(65);
         }
+        if(hadRuntimeError){
+            Environment.Exit(70);
+        }
     }
 
     private static void Run(string input)
@@ -70,9 +76,11 @@ public class Lox{
         if(hadError){
             return;
         }
-        
 
-        Console.WriteLine(new AstPrinter().Print(expression));
+
+        myInterpreter.Interpret(expression);
+
+        //Console.WriteLine(new AstPrinter().Print(expression));
     }
 
     public static void Error(int line, string message){
@@ -95,5 +103,11 @@ public class Lox{
         errorWriter.WriteLine($"[line {line}] Error {where} : {message}");
 
         hadError = true;
+    }
+
+    internal static void runtimeError(RuntimeError re)
+    {
+       Console.Error.WriteLine($"{re.Message} \n[line {re.Token.line}]");
+       hadRuntimeError = true;
     }
 }

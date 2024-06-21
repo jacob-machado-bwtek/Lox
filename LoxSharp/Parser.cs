@@ -1,6 +1,7 @@
 
 
 using System.Diagnostics.CodeAnalysis;
+using System.Linq.Expressions;
 using System.Reflection;
 using System.Text.RegularExpressions;
 
@@ -32,6 +33,23 @@ public partial class Parser{
 
     private Expr Expression(){
         return Equality();
+    }
+
+    private Expr Comma(){
+        Expr expr = Assignment(); 
+
+        while(Match(TokenType.COMMA)){
+            Token op = Previous();
+            Expr right = Assignment();
+            expr = new Expr.Binary(expr, op, right);
+        }
+
+        return expr;
+    }
+
+    private Expr Assignment()
+    {
+        throw new NotImplementedException();
     }
 
     private Expr Equality()
@@ -99,6 +117,10 @@ public partial class Parser{
             Expr right = Unary();
             return new Expr.Unary(op, right);
         }
+        else if(Match(TokenType.PLUS,TokenType.SLASH, TokenType.STAR, TokenType.COMMA, TokenType.EQUAL_EQUAL,
+                    TokenType.BANG_EQUAL, TokenType.LESS, TokenType.LESS_EQUAL, TokenType.GREATER, TokenType.GREATER_EQUAL)){
+                throw Error(Previous(),"Invalid Unary Operator");
+                }
 
         return Primary();
     }
