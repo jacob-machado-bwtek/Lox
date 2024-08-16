@@ -18,7 +18,7 @@ class LoxEnvironment {
 
     public void Assign(Token name, Object value) {
         if(values.ContainsKey(name.lexeme)) {
-            values.Add(name.lexeme,value);
+            values[name.lexeme] = value;
             return;
         }
 
