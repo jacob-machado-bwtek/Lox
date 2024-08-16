@@ -222,11 +222,17 @@ public class Interpreter : Expr.IVisitor<Object>, Stmt.IVisitor<Object> {
 
     public object visitVarStmt(Stmt.Var stmt)
     {
-        throw new NotImplementedException();
+        Object val = null;
+        if(stmt.initializer != null){
+            val = Evaluate(stmt.initializer);
+        }
+
+        environment.Define(stmt.name.lexeme,val);
+        return null; 
     }
 
     public object visitVariableExpr(Expr.Variable expr)
     {
-        throw new NotImplementedException();
+        return environment.Get(expr.name);
     }
 }

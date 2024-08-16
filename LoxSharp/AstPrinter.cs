@@ -44,4 +44,8 @@ public class AstPrinter : Expr.IVisitor<string>{
         return builder.ToString(); 
     }
 
+    public string visitVariableExpr(Expr.Variable expr)
+    {
+        throw new NotImplementedException();
+    }
 }
