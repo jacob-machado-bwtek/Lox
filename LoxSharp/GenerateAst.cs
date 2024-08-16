@@ -10,20 +10,24 @@ namespace LoxSharp.Tools;
         }
         string outputDir = args[1];
 
-        List<string> types = new List<string>{
+        List<string> ExprTypes = new List<string>{
             "Binary : Expr left,Token Op,Expr right",
             "Grouping : Expr expression",
             "Literal : Object value",
             "Unary : Token op,Expr right",
             "Variable : Token name",
+        };
 
+        List<string> StmtTypes = new List<string>{
             "Expression : Expr expression",
             "Print : Expr expression ",
             "Var : Token name,Expr initializer",
+
         };
 
+        DefineAst(outputDir, "Expr", ExprTypes);
 
-        DefineAst(outputDir, "Stmt", types);
+        DefineAst(outputDir, "Stmt", StmtTypes);
     }
 
     private static void DefineAst(string outputDir, string baseName, List<string> types)

@@ -3,6 +3,7 @@ namespace LoxSharp;
 
 public class Interpreter : Expr.IVisitor<Object>, Stmt.IVisitor<Object> {
 
+    private LoxEnvironment environment = new LoxEnvironment();
  public Interpreter() {}
 
 
@@ -181,22 +182,22 @@ public class Interpreter : Expr.IVisitor<Object>, Stmt.IVisitor<Object> {
         return true;
     }
 
-    public object visitBinaryStmt(Stmt.Binary stmt)
+    public object visitBinaryStmt(Expr.Binary stmt)
     {
         throw new NotImplementedException();
     }
 
-    public object visitGroupingStmt(Stmt.Grouping stmt)
+    public object visitGroupingStmt(Expr.Grouping stmt)
     {
         throw new NotImplementedException();
     }
 
-    public object visitLiteralStmt(Stmt.Literal stmt)
+    public object visitLiteralStmt(Expr.Literal stmt)
     {
         throw new NotImplementedException();
     }
 
-    public object visitUnaryStmt(Stmt.Unary stmt)
+    public object visitUnaryStmt(Expr.Unary stmt)
     {
         throw new NotImplementedException();
     }
@@ -214,12 +215,17 @@ public class Interpreter : Expr.IVisitor<Object>, Stmt.IVisitor<Object> {
         return null;
     }
 
-    public object visitVariableStmt(Stmt.Variable stmt)
+    public object visitVariableStmt(Expr.Variable stmt)
     {
         throw new NotImplementedException();
     }
 
     public object visitVarStmt(Stmt.Var stmt)
+    {
+        throw new NotImplementedException();
+    }
+
+    public object visitVariableExpr(Expr.Variable expr)
     {
         throw new NotImplementedException();
     }
