@@ -3,7 +3,7 @@ using System.Text;
 
 namespace LoxSharp;
 
-public class AstPrinter : Expr.Visitor<string>{
+public class AstPrinter : Expr.IVisitor<string>{
     public string Print(Expr expr) {
         return expr.accept(this);
     }

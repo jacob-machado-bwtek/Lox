@@ -15,8 +15,11 @@ namespace LoxSharp.Tools;
             "Grouping : Expr expression",
             "Literal : Object value",
             "Unary : Token op,Expr right",
+            "Variable : Token name",
+
             "Expression : Expr expression",
-            "Print : Expr expression "
+            "Print : Expr expression ",
+            "Var : Token name,Expr initializer",
         };
 
 
@@ -43,7 +46,7 @@ namespace LoxSharp.Tools;
         }
 
         writer.WriteLine();
-        writer.WriteLine("public abstract R accept<R>(Visitor<R> visitor);");
+        writer.WriteLine("public abstract R accept<R>(IVisitor<R> visitor);");
 
         writer.WriteLine("}");
 
@@ -53,7 +56,7 @@ namespace LoxSharp.Tools;
 
     private static void defineVisitor(TextWriter writer, string baseName, List<string> types)
     {
-        writer.WriteLine("public interface Visitor<R>{");
+        writer.WriteLine("public interface IVisitor<R>{");
         foreach (string type in types) {
             string typeName = type.Split(':')[0].Trim();
             writer.WriteLine($"\t\tR visit{typeName}{baseName}({typeName} {baseName.ToLower()});");
@@ -81,7 +84,7 @@ namespace LoxSharp.Tools;
         writer.WriteLine("\t}");
 
         writer.WriteLine();
-        writer.WriteLine("public override  R accept<R>(Visitor<R> visitor) {");
+        writer.WriteLine("public override  R accept<R>(IVisitor<R> visitor) {");
         writer.WriteLine($"\t\t\t return visitor.visit{className}{baseName}(this);");
         writer.WriteLine("\t\t }");
 

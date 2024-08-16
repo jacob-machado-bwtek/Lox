@@ -71,15 +71,14 @@ public class Lox{
         List<Token> tokens = scanner.scanTokens();
         Parser parser = new Parser(tokens);
 
-        Expr expression = parser.Parse();
+        List<Stmt> stmts = parser.Parse();
 
         if(hadError){
             return;
         }
 
 
-        myInterpreter.Interpret(expression);
-
+        myInterpreter.Interpret(stmts);
         //Console.WriteLine(new AstPrinter().Print(expression));
     }
 

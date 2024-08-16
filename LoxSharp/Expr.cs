@@ -3,7 +3,7 @@
  
 
 public abstract class Expr {
-public interface Visitor<R>{
+public interface IVisitor<R>{
 		R visitBinaryExpr(Binary expr);
 		R visitGroupingExpr(Grouping expr);
 		R visitLiteralExpr(Literal expr);
@@ -16,7 +16,7 @@ public class Binary : Expr {
 		this.right = right;
 	}
 
-public override  R accept<R>(Visitor<R> visitor) {
+public override  R accept<R>(IVisitor<R> visitor) {
 			 return visitor.visitBinaryExpr(this);
 		 }
 
@@ -30,7 +30,7 @@ public class Grouping : Expr {
 		this.expression = expression;
 	}
 
-public override  R accept<R>(Visitor<R> visitor) {
+public override  R accept<R>(IVisitor<R> visitor) {
 			 return visitor.visitGroupingExpr(this);
 		 }
 
@@ -42,7 +42,7 @@ public class Literal : Expr {
 		this.value = value;
 	}
 
-public override  R accept<R>(Visitor<R> visitor) {
+public override  R accept<R>(IVisitor<R> visitor) {
 			 return visitor.visitLiteralExpr(this);
 		 }
 
@@ -55,7 +55,7 @@ public class Unary : Expr {
 		this.right = right;
 	}
 
-public override  R accept<R>(Visitor<R> visitor) {
+public override  R accept<R>(IVisitor<R> visitor) {
 			 return visitor.visitUnaryExpr(this);
 		 }
 
@@ -64,5 +64,5 @@ public override  R accept<R>(Visitor<R> visitor) {
 	 public Expr right { get; }
 }
 
-public abstract R accept<R>(Visitor<R> visitor);
+public abstract R accept<R>(IVisitor<R> visitor);
 }

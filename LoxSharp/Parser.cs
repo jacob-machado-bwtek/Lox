@@ -14,12 +14,36 @@ public partial class Parser{
     private bool IsAtEnd{get{return Peek().type == TokenType.EOF;}}
 
 
-    public Expr Parse(){
-        try{
-            return Expression();
-        }catch(ParseError){
-            return null;
+    public List<Stmt> Parse(){
+        List<Stmt> statements = new List<Stmt>();
+        while(!IsAtEnd){
+            statements.Add(statement());
         }
+
+        return statements;
+    }
+
+    private Stmt statement()
+    {
+        if(Match(TokenType.PRINT)){
+            return PrintStatement();
+        }else{
+        return ExpressionStatement();
+        }
+    }
+
+    private Stmt ExpressionStatement()
+    {
+        Expr expr = Expression();
+        Consume(TokenType.SEMICOLON, "Expect ';' after expression:");
+        return new Stmt.Print(expr);
+    }
+
+    private Stmt PrintStatement()
+    {
+        Expr value = Expression();
+        Consume(TokenType.SEMICOLON, "Expect ';' after value.");
+        return new Stmt.Print(value);
     }
 
     private Token Peek()

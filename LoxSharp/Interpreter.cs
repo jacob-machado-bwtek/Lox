@@ -1,18 +1,25 @@
 
 namespace LoxSharp;
 
-public class Interpreter : Expr.Visitor<Object> {
+public class Interpreter : Expr.IVisitor<Object>, Stmt.IVisitor<Object> {
 
  public Interpreter() {}
 
 
-    public void Interpret(Expr expression){
+    public void Interpret(List<Stmt> stmts){
         try{
-            Object value = Evaluate(expression);
-            Console.WriteLine(Stringify(value));
-        } catch(RuntimeError re) {
-            Lox.runtimeError(re);
+            foreach (Stmt statement in stmts){
+                Execute(statement);
+            }
+        } catch (RuntimeError error) {
+            Lox.runtimeError(error);
         }
+        
+    }
+
+    private void Execute(Stmt statement)
+    {
+        statement.accept(this);
     }
 
     private string Stringify(object value)
@@ -92,7 +99,7 @@ public class Interpreter : Expr.Visitor<Object> {
                     return left.ToString() + (string)right;
                 }
 
-                //throw new R`timeError(expr.Op, "operands must be two numbers or two strings");
+                //throw new RuntimeError(expr.Op, "operands must be two numbers or two strings");
                 break;
                 
                 
@@ -172,5 +179,48 @@ public class Interpreter : Expr.Visitor<Object> {
         }
 
         return true;
+    }
+
+    public object visitBinaryStmt(Stmt.Binary stmt)
+    {
+        throw new NotImplementedException();
+    }
+
+    public object visitGroupingStmt(Stmt.Grouping stmt)
+    {
+        throw new NotImplementedException();
+    }
+
+    public object visitLiteralStmt(Stmt.Literal stmt)
+    {
+        throw new NotImplementedException();
+    }
+
+    public object visitUnaryStmt(Stmt.Unary stmt)
+    {
+        throw new NotImplementedException();
+    }
+
+    public object visitExpressionStmt(Stmt.Expression stmt)
+    {
+        Evaluate(stmt.expression);
+        return null;
+    }
+
+    public object visitPrintStmt(Stmt.Print stmt)
+    {
+        Object val = Evaluate(stmt.expression);
+        Console.WriteLine(Stringify(val));
+        return null;
+    }
+
+    public object visitVariableStmt(Stmt.Variable stmt)
+    {
+        throw new NotImplementedException();
+    }
+
+    public object visitVarStmt(Stmt.Var stmt)
+    {
+        throw new NotImplementedException();
     }
 }

@@ -3,13 +3,15 @@
  
 
 public abstract class Stmt {
-public interface Visitor<R>{
+public interface IVisitor<R>{
 		R visitBinaryStmt(Binary stmt);
 		R visitGroupingStmt(Grouping stmt);
 		R visitLiteralStmt(Literal stmt);
 		R visitUnaryStmt(Unary stmt);
+		R visitVariableStmt(Variable stmt);
 		R visitExpressionStmt(Expression stmt);
 		R visitPrintStmt(Print stmt);
+		R visitVarStmt(Var stmt);
 }
 public class Binary : Stmt {
 	 public Binary(Expr left,Token Op,Expr right){
@@ -18,7 +20,7 @@ public class Binary : Stmt {
 		this.right = right;
 	}
 
-public override  R accept<R>(Visitor<R> visitor) {
+public override  R accept<R>(IVisitor<R> visitor) {
 			 return visitor.visitBinaryStmt(this);
 		 }
 
@@ -32,7 +34,7 @@ public class Grouping : Stmt {
 		this.expression = expression;
 	}
 
-public override  R accept<R>(Visitor<R> visitor) {
+public override  R accept<R>(IVisitor<R> visitor) {
 			 return visitor.visitGroupingStmt(this);
 		 }
 
@@ -44,7 +46,7 @@ public class Literal : Stmt {
 		this.value = value;
 	}
 
-public override  R accept<R>(Visitor<R> visitor) {
+public override  R accept<R>(IVisitor<R> visitor) {
 			 return visitor.visitLiteralStmt(this);
 		 }
 
@@ -57,7 +59,7 @@ public class Unary : Stmt {
 		this.right = right;
 	}
 
-public override  R accept<R>(Visitor<R> visitor) {
+public override  R accept<R>(IVisitor<R> visitor) {
 			 return visitor.visitUnaryStmt(this);
 		 }
 
@@ -65,12 +67,24 @@ public override  R accept<R>(Visitor<R> visitor) {
 	 public Token op { get; }
 	 public Expr right { get; }
 }
+public class Variable : Stmt {
+	 public Variable(Token name){
+		this.name = name;
+	}
+
+public override  R accept<R>(IVisitor<R> visitor) {
+			 return visitor.visitVariableStmt(this);
+		 }
+
+
+	 public Token name { get; }
+}
 public class Expression : Stmt {
 	 public Expression(Expr expression){
 		this.expression = expression;
 	}
 
-public override  R accept<R>(Visitor<R> visitor) {
+public override  R accept<R>(IVisitor<R> visitor) {
 			 return visitor.visitExpressionStmt(this);
 		 }
 
@@ -82,13 +96,27 @@ public class Print : Stmt {
 		this.expression = expression;
 	}
 
-public override  R accept<R>(Visitor<R> visitor) {
+public override  R accept<R>(IVisitor<R> visitor) {
 			 return visitor.visitPrintStmt(this);
 		 }
 
 
 	 public Expr expression { get; }
 }
+public class Var : Stmt {
+	 public Var(Token name,Expr initializer){
+		this.name = name;
+		this.initializer = initializer;
+	}
 
-public abstract R accept<R>(Visitor<R> visitor);
+public override  R accept<R>(IVisitor<R> visitor) {
+			 return visitor.visitVarStmt(this);
+		 }
+
+
+	 public Token name { get; }
+	 public Expr initializer { get; }
+}
+
+public abstract R accept<R>(IVisitor<R> visitor);
 }
