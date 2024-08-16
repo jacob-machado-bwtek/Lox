@@ -11,6 +11,7 @@ namespace LoxSharp.Tools;
         string outputDir = args[1];
 
         List<string> ExprTypes = new List<string>{
+            "Assign : Token name,Expr value",
             "Binary : Expr left,Token Op,Expr right",
             "Grouping : Expr expression",
             "Literal : Object value",

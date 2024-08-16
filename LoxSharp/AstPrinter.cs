@@ -48,4 +48,9 @@ public class AstPrinter : Expr.IVisitor<string>{
     {
         throw new NotImplementedException();
     }
+
+    public string visitAssignExpr(Expr.Assign expr)
+    {
+        throw new NotImplementedException();
+    }
 }

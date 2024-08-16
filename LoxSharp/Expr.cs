@@ -4,11 +4,26 @@
 
 public abstract class Expr {
 public interface IVisitor<R>{
+		R visitAssignExpr(Assign expr);
 		R visitBinaryExpr(Binary expr);
 		R visitGroupingExpr(Grouping expr);
 		R visitLiteralExpr(Literal expr);
 		R visitUnaryExpr(Unary expr);
 		R visitVariableExpr(Variable expr);
+}
+public class Assign : Expr {
+	 public Assign(Token name,Expr value){
+		this.name = name;
+		this.value = value;
+	}
+
+public override  R accept<R>(IVisitor<R> visitor) {
+			 return visitor.visitAssignExpr(this);
+		 }
+
+
+	 public Token name { get; }
+	 public Expr value { get; }
 }
 public class Binary : Expr {
 	 public Binary(Expr left,Token Op,Expr right){

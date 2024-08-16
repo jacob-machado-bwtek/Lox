@@ -16,4 +16,13 @@ class LoxEnvironment {
         values.Add(name, value);
     }
 
+    public void Assign(Token name, Object value) {
+        if(values.ContainsKey(name.lexeme)) {
+            values.Add(name.lexeme,value);
+            return;
+        }
+
+        throw new RuntimeError(name, $"Undefined variable {name.lexeme}.");
+    }
+
 }

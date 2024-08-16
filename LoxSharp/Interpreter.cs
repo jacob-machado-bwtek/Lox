@@ -235,4 +235,11 @@ public class Interpreter : Expr.IVisitor<Object>, Stmt.IVisitor<Object> {
     {
         return environment.Get(expr.name);
     }
+
+    public object visitAssignExpr(Expr.Assign expr)
+    {
+        Object value = Evaluate(expr.value);
+        environment.Assign(expr.name,value);
+        return null;
+    }
 }
