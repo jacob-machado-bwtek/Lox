@@ -1,4 +1,6 @@
 
+using System.Security.Cryptography.X509Certificates;
+
 namespace LoxSharp;
 
 public class Interpreter : Expr.IVisitor<Object>, Stmt.IVisitor<Object> {
@@ -241,5 +243,26 @@ public class Interpreter : Expr.IVisitor<Object>, Stmt.IVisitor<Object> {
         Object value = Evaluate(expr.value);
         environment.Assign(expr.name,value);
         return null;
+    }
+
+    public object visitBlockStmt(Stmt.Block stmt)
+    {
+        ExecuteBlock(stmt.statements, new LoxEnvironment(environment));
+        return null;
+    }
+
+    private void ExecuteBlock(List<Stmt> statements, LoxEnvironment environment)
+    {
+        LoxEnvironment prev = this.environment;
+
+        try{
+            this.environment = environment;
+
+            foreach(Stmt stmt in statements){
+                Execute(stmt);
+            }
+        }finally{
+            this.environment = prev;
+        }
     }
 }

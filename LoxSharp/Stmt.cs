@@ -4,9 +4,22 @@
 
 public abstract class Stmt {
 public interface IVisitor<R>{
+		R visitBlockStmt(Block stmt);
 		R visitExpressionStmt(Expression stmt);
 		R visitPrintStmt(Print stmt);
 		R visitVarStmt(Var stmt);
+}
+public class Block : Stmt {
+	 public Block(List<Stmt> statements){
+		this.statements = statements;
+	}
+
+public override  R accept<R>(IVisitor<R> visitor) {
+			 return visitor.visitBlockStmt(this);
+		 }
+
+
+	 public List<Stmt> statements { get; }
 }
 public class Expression : Stmt {
 	 public Expression(Expr expression){

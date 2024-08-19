@@ -20,6 +20,7 @@ namespace LoxSharp.Tools;
         };
 
         List<string> StmtTypes = new List<string>{
+            "Block : List<Stmt> statements",
             "Expression : Expr expression",
             "Print : Expr expression ",
             "Var : Token name,Expr initializer",
