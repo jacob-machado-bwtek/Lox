@@ -9,6 +9,7 @@ public interface IVisitor<R>{
 		R visitIfStmt(If stmt);
 		R visitPrintStmt(Print stmt);
 		R visitVarStmt(Var stmt);
+		R visitWhileStmt(While stmt);
 }
 public class Block : Stmt {
 	 public Block(List<Stmt> statements){
@@ -75,6 +76,20 @@ public override  R accept<R>(IVisitor<R> visitor) {
 
 	 public Token name { get; }
 	 public Expr initializer { get; }
+}
+public class While : Stmt {
+	 public While(Expr condition,Stmt body){
+		this.condition = condition;
+		this.body = body;
+	}
+
+public override  R accept<R>(IVisitor<R> visitor) {
+			 return visitor.visitWhileStmt(this);
+		 }
+
+
+	 public Expr condition { get; }
+	 public Stmt body { get; }
 }
 
 public abstract R accept<R>(IVisitor<R> visitor);

@@ -8,7 +8,7 @@ namespace LoxSharp.Tools;
             Console.Error.WriteLine("Usage: loxsharp -generate-ast <output directory>");
             Environment.Exit(64);
         }
-        string outputDir = args[1];
+        string outputDir = args[0];
 
         List<string> ExprTypes = new List<string>{
             "Assign : Token name,Expr value",
@@ -31,8 +31,10 @@ namespace LoxSharp.Tools;
         };
 
         DefineAst(outputDir, "Expr", ExprTypes);
-
+        Console.WriteLine("Expr.cs Generated");
         DefineAst(outputDir, "Stmt", StmtTypes);
+        Console.WriteLine("Stmt.cs Generated");
+
     }
 
     private static void DefineAst(string outputDir, string baseName, List<string> types)

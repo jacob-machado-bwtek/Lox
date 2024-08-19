@@ -7,7 +7,6 @@ using System.Runtime.InteropServices;
 using System.Security.Principal;
 using System.Text;
 using global::LoxSharp;
-using LoxSharp.Tools;
 
 public class Lox{
     private static bool hadError = false;
