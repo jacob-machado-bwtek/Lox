@@ -3,6 +3,16 @@
     "console": "integratedTerminal",
     "configurations": [
         {
+            "name": "Generate AST",
+            "type": "coreclr",
+            "request": "launch",
+            "program": "${workspaceFolder}/GenerateAst/bin/Debug/net8.0/GenerateAst.dll",
+            "args": ["${workspaceFolder}/LoxSharp"],
+            "cwd": "${workspaceFolder}",
+            "stopAtEntry": false,
+            "console": "internalConsole"
+        },
+        {
             "type": "lldb",
             "request": "launch",
             "name": "Rlox",
@@ -26,14 +36,6 @@
             "projectPath": "${workspaceFolder}\\LoxSharp\\LoxSharp.csproj",
             "launchConfigurationId": "TargetFramework=;LoxSharp"
         }, 
-        {
-            "type": "coreclr",
-            "request": "launch",
-            "name": "LoxSharp on Input.txt",
-            "program": "${workspaceFolder}/LoxSharp/bin/Debug/net8.0/LoxSharp.dll",
-            "args": [
-                "${workspaceFolder}/inputs/input.txt"
-            ]
-        },
+
     ]
 }

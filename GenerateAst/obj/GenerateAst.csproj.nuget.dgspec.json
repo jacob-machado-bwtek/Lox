@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\4510133\\OneDrive - Metrohm Group\\Documents\\Lox\\GenerateAst\\GenerateAst.csproj": {}
+    "c:\\Users\\4510133\\OneDrive - Metrohm Group\\Documents\\Lox\\GenerateAst\\GenerateAst.csproj": {}
   },
   "projects": {
-    "C:\\Users\\4510133\\OneDrive - Metrohm Group\\Documents\\Lox\\GenerateAst\\GenerateAst.csproj": {
+    "c:\\Users\\4510133\\OneDrive - Metrohm Group\\Documents\\Lox\\GenerateAst\\GenerateAst.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\4510133\\OneDrive - Metrohm Group\\Documents\\Lox\\GenerateAst\\GenerateAst.csproj",
+        "projectUniqueName": "c:\\Users\\4510133\\OneDrive - Metrohm Group\\Documents\\Lox\\GenerateAst\\GenerateAst.csproj",
         "projectName": "GenerateAst",
-        "projectPath": "C:\\Users\\4510133\\OneDrive - Metrohm Group\\Documents\\Lox\\GenerateAst\\GenerateAst.csproj",
+        "projectPath": "c:\\Users\\4510133\\OneDrive - Metrohm Group\\Documents\\Lox\\GenerateAst\\GenerateAst.csproj",
         "packagesPath": "C:\\Users\\4510133\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\4510133\\OneDrive - Metrohm Group\\Documents\\Lox\\GenerateAst\\obj\\",
+        "outputPath": "c:\\Users\\4510133\\OneDrive - Metrohm Group\\Documents\\Lox\\GenerateAst\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files\\DevExpress 22.2\\Components\\Offline Packages",
