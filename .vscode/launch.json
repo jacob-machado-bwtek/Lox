@@ -9,7 +9,7 @@
             "program": "${workspaceFolder}/GenerateAst/bin/Debug/net8.0/GenerateAst.dll",
             "args": ["${workspaceFolder}/LoxSharp"],
             "cwd": "${workspaceFolder}",
-            "stopAtEntry": true,
+            "stopAtEntry": false,
             "console": "internalConsole"
         },
         {

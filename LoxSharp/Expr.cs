@@ -6,6 +6,7 @@ public abstract class Expr {
 public interface IVisitor<R>{
 		R visitAssignExpr(Assign expr);
 		R visitBinaryExpr(Binary expr);
+		R visitCallExpr(Call expr);
 		R visitGroupingExpr(Grouping expr);
 		R visitLiteralExpr(Literal expr);
 		R visitLogicalExpr(Logical expr);
@@ -41,6 +42,22 @@ public override  R accept<R>(IVisitor<R> visitor) {
 	 public Expr left { get; }
 	 public Token Op { get; }
 	 public Expr right { get; }
+}
+public class Call : Expr {
+	 public Call(Expr callee,Token paren,List<Expr> arguments){
+		this.callee = callee;
+		this.paren = paren;
+		this.arguments = arguments;
+	}
+
+public override  R accept<R>(IVisitor<R> visitor) {
+			 return visitor.visitCallExpr(this);
+		 }
+
+
+	 public Expr callee { get; }
+	 public Token paren { get; }
+	 public List<Expr> arguments { get; }
 }
 public class Grouping : Expr {
 	 public Grouping(Expr expression){

@@ -13,12 +13,14 @@ namespace LoxSharp.Tools;
         List<string> ExprTypes = new List<string>{
             "Assign : Token name,Expr value",
             "Binary : Expr left,Token Op,Expr right",
+            "Call : Expr callee,Token paren,List<Expr> arguments",
             "Grouping : Expr expression",
             "Literal : Object value",
             "Logical : Expr left,Token Op,Expr right",
             "Unary : Token op,Expr right",
             "Variable : Token name",
         };
+        Console.WriteLine(ExprTypes);
 
         List<string> StmtTypes = new List<string>{
             "Block : List<Stmt> statements",
@@ -29,6 +31,7 @@ namespace LoxSharp.Tools;
             "While : Expr condition,Stmt body",
 
         };
+        Console.WriteLine(StmtTypes);
 
         DefineAst(outputDir, "Expr", ExprTypes);
         Console.WriteLine("Expr.cs Generated");
