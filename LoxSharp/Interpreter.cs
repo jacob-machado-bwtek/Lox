@@ -265,4 +265,31 @@ public class Interpreter : Expr.IVisitor<Object>, Stmt.IVisitor<Object> {
             this.environment = prev;
         }
     }
+
+    public object visitIfStmt(Stmt.If stmt)
+    {
+        if(isTruthy(Evaluate(stmt.condition))){
+            Execute(stmt.thenBranch);
+        }else if(stmt.elseBranch != null){
+            Execute(stmt.elseBranch);
+        }
+
+        return null;
+    }
+
+    public object visitLogicalExpr(Expr.Logical expr)
+    {
+        Object left = Evaluate(expr.left);
+
+        if(expr.Op.type == TokenType.OR){
+            if(isTruthy(left)){
+                return left;
+            }
+        } else{
+            if(!isTruthy(left)){
+                return left;
+            }
+        }
+        return Evaluate(expr.right);
+    }
 }

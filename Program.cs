@@ -1,10 +1,10 @@
-using System.Text;
+﻿using System.Text;
 
 namespace LoxSharp.Tools;
 
- public class GenerateAst{
-    public static void GenerateAstMain(string[] args){
-        if (args.Length != 2){
+ public static class GenerateAst{
+    public static void Main(string[] args){
+        if (args.Length != 1){
             Console.Error.WriteLine("Usage: loxsharp -generate-ast <output directory>");
             Environment.Exit(64);
         }
@@ -15,6 +15,7 @@ namespace LoxSharp.Tools;
             "Binary : Expr left,Token Op,Expr right",
             "Grouping : Expr expression",
             "Literal : Object value",
+            "Logical : Expr left,Token Op,Expr right",
             "Unary : Token op,Expr right",
             "Variable : Token name",
         };
@@ -22,8 +23,10 @@ namespace LoxSharp.Tools;
         List<string> StmtTypes = new List<string>{
             "Block : List<Stmt> statements",
             "Expression : Expr expression",
+            "If : Expr condition,Stmt thenBranch,Stmt elseBranch", 
             "Print : Expr expression ",
             "Var : Token name,Expr initializer",
+            "While : Expr condition,Stmt body",
 
         };
 

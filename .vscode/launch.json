@@ -1,7 +1,4 @@
 {
-    // Use IntelliSense to learn about possible attributes.
-    // Hover to view descriptions of existing attributes.
-    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
     "console": "integratedTerminal",
     "configurations": [
@@ -14,13 +11,29 @@
             "cwd": "${workspaceFolder}/rlox"
         },
         {
-            "type":"coreclr",
+            "type": "coreclr",
             "request": "launch",
             "name": "LoxSharp on Input.txt",
             "program": "${workspaceFolder}/LoxSharp/bin/Debug/net8.0/LoxSharp.dll",
-            "args": ["${workspaceFolder}/inputs/input.txt"], 
-             
+            "args": [
+                "${workspaceFolder}/inputs/input.txt"
+            ]
         },
-
+        {
+            "name": "C#: LoxSharp",
+            "type": "dotnet",
+            "request": "launch",
+            "projectPath": "${workspaceFolder}\\LoxSharp\\LoxSharp.csproj",
+            "launchConfigurationId": "TargetFramework=;LoxSharp"
+        }, 
+        {
+            "type": "coreclr",
+            "request": "launch",
+            "name": "LoxSharp on Input.txt",
+            "program": "${workspaceFolder}/LoxSharp/bin/Debug/net8.0/LoxSharp.dll",
+            "args": [
+                "${workspaceFolder}/inputs/input.txt"
+            ]
+        },
     ]
 }

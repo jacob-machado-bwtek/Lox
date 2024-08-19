@@ -20,9 +20,6 @@ public class Lox{
         if(args.Length > 1){
 
             if(args.Length == 2){
-                if(args[0].ToLower() == "-generate-ast"){
-                    GenerateAst.GenerateAstMain(args);
-                }
             }
             else{
                             Console.WriteLine("Usage: LoxSharp[Script]");

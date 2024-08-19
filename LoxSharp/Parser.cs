@@ -30,7 +30,7 @@ public partial class Parser{
                 return VarDeclaration();
             }
 
-            return statement();
+            return Statement();
         } catch(ParseError er){
             Synchronize();
             return null;
@@ -51,15 +51,34 @@ public partial class Parser{
         return new Stmt.Var(name, initializer);
     }
 
-    private Stmt statement()
+    private Stmt Statement()
     {
-        if(Match(TokenType.PRINT)){
+        if(Match(TokenType.IF)){
+            return IfStatement();
+        }
+        else if(Match(TokenType.PRINT)){
             return PrintStatement();
         }else if (Match(TokenType.LEFT_BRACE)){
             return new Stmt.Block(Block());
         }else{
             return ExpressionStatement();
         }
+    }
+
+    private Stmt IfStatement()
+    {
+        Consume(TokenType.LEFT_PAREN, "Expect '()' after 'if'.");
+        Expr condition = Expression();
+        Consume(TokenType.RIGHT_PAREN, "Expect ')' after if condition.");
+
+        Stmt thenBranch = Statement();
+        Stmt elseBranch = null;
+
+        if(Match(TokenType.ELSE)){
+            elseBranch = Statement();
+        } 
+
+        return new Stmt.If(condition, thenBranch, elseBranch);
     }
 
     private List<Stmt> Block()
@@ -117,7 +136,7 @@ public partial class Parser{
 
     private Expr Assignment()
     {
-        Expr expr = Equality();
+        Expr expr = Or();
 
         if(Match(TokenType.EQUAL)){
             Token equals = Previous();
@@ -129,6 +148,34 @@ public partial class Parser{
             }
 
             Error(equals, "Invalid assignment target.");
+        }
+
+        return expr;
+    }
+
+    private Expr Or()
+    {
+        Expr expr = And();
+
+        while(Match(TokenType.OR)){
+            Token Op = Previous();
+
+            Expr right = And();
+
+            expr = new Expr.Logical(expr, Op, right);
+        }
+
+        return expr;
+    }
+
+    private Expr And()
+    {
+        Expr expr = Equality();
+
+        while(Match(TokenType.AND)){
+            Token tokenOp = Previous();
+            Expr right = Equality();
+            expr = new Expr.Logical(expr, tokenOp,right);
         }
 
         return expr;
