@@ -113,7 +113,7 @@ public partial class Parser{
             );
         }
 
-        
+
 
         return body;
     }
@@ -310,7 +310,41 @@ public partial class Parser{
             return new Expr.Unary(op, right);
         }
 
-        return Primary();
+        return Call();
+    }
+
+    private Expr Call()
+    {
+        Expr expr = Primary();
+
+        while(true){
+            if(Match(TokenType.LEFT_PAREN)){
+                expr = FinishCall(expr);
+            } else{
+                break;
+            }
+        }
+
+        return expr;
+    }
+
+    private Expr FinishCall(Expr callee)
+    {
+        List<Expr> args = new List<Expr>();
+
+        if(!Check(TokenType.RIGHT_PAREN)){
+            do{
+                if(args.Count >= 255){
+                    Error(Peek(), "Cant have more than 255 arguments");
+                }
+                args.Add(Expression());
+            } while(Match(TokenType.COMMA));
+        }
+
+        Token paren = Consume(TokenType.RIGHT_PAREN, "Expect ')' after arguments.");
+
+
+        return new Expr.Call(callee, paren, args);
     }
 
     private Expr Primary()

@@ -5,9 +5,20 @@ namespace LoxSharp;
 
 public class Interpreter : Expr.IVisitor<Object>, Stmt.IVisitor<Object> {
 
-    private LoxEnvironment environment = new LoxEnvironment();
- public Interpreter() {}
+    readonly LoxEnvironment globals = new LoxEnvironment();
 
+    private LoxEnvironment _environment;
+ public Interpreter() {
+    _environment = globals;
+
+   DefineNativeFunctions();
+ }
+
+    private void DefineNativeFunctions()
+    {
+        globals.Define("clock", new NativeFunctions.Clock());
+
+    }
 
     public void Interpret(List<Stmt> stmts){
         try{
@@ -229,40 +240,40 @@ public class Interpreter : Expr.IVisitor<Object>, Stmt.IVisitor<Object> {
             val = Evaluate(stmt.initializer);
         }
 
-        environment.Define(stmt.name.lexeme,val);
+        _environment.Define(stmt.name.lexeme,val);
         return null; 
     }
 
     public object visitVariableExpr(Expr.Variable expr)
     {
-        return environment.Get(expr.name);
+        return _environment.Get(expr.name);
     }
 
     public object visitAssignExpr(Expr.Assign expr)
     {
         Object value = Evaluate(expr.value);
-        environment.Assign(expr.name,value);
+        _environment.Assign(expr.name,value);
         return null;
     }
 
     public object visitBlockStmt(Stmt.Block stmt)
     {
-        ExecuteBlock(stmt.statements, new LoxEnvironment(environment));
+        ExecuteBlock(stmt.statements, new LoxEnvironment(_environment));
         return null;
     }
 
     private void ExecuteBlock(List<Stmt> statements, LoxEnvironment environment)
     {
-        LoxEnvironment prev = this.environment;
+        LoxEnvironment prev = this._environment;
 
         try{
-            this.environment = environment;
+            this._environment = environment;
 
             foreach(Stmt stmt in statements){
                 Execute(stmt);
             }
         }finally{
-            this.environment = prev;
+            this._environment = prev;
         }
     }
 
@@ -299,5 +310,28 @@ public class Interpreter : Expr.IVisitor<Object>, Stmt.IVisitor<Object> {
             Execute(stmt.body);
         }
         return null;
+    }
+
+    public object visitCallExpr(Expr.Call expr)
+    {
+        Object callee = Evaluate(expr.callee);
+
+        List<object> args = new List<object>();
+
+        foreach(Expr arg in expr.arguments){
+            args.Add(Evaluate(arg));
+        }
+
+        if(callee is not ICallable){
+            throw new RuntimeError(expr.paren, "can only call functions and classes");
+        }
+
+        ICallable function = (ICallable)callee;
+
+        if(args.Count != function.Arity){
+            throw new RuntimeError(expr.paren, $"Expected {function.Arity} arguments but got {args.Count}.");
+        }
+
+        return function.Call(this, args);
     }
 }
