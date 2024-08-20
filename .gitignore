@@ -1,3 +1,6 @@
 /rlox/target/*
 /LoxSharp/bin/*
 /LoxSharp/obj/Debug/*
+
+/GenerateAst/bin/*
+/GenerateAst/obj/Debug/*
