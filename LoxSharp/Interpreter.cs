@@ -1,4 +1,5 @@
 
+using System.Reflection.Metadata;
 using System.Security.Cryptography.X509Certificates;
 
 namespace LoxSharp;
@@ -6,7 +7,7 @@ namespace LoxSharp;
 public class Interpreter : Expr.IVisitor<Object>, Stmt.IVisitor<Object> {
 
     public readonly LoxEnvironment globals = new LoxEnvironment();
-
+    private readonly Dictionary<Expr,int> _locals = new();
     private LoxEnvironment _environment;
  public Interpreter() {
     _environment = globals;
@@ -246,12 +247,31 @@ public class Interpreter : Expr.IVisitor<Object>, Stmt.IVisitor<Object> {
 
     public object visitVariableExpr(Expr.Variable expr)
     {
-        return _environment.Get(expr.name);
+        return LookUpVariable(expr.name,expr);
+    }
+
+    private object LookUpVariable(Token name, Expr.Variable expr)
+    {
+        int distance = _locals[expr];
+
+        if(distance != null){
+            return _environment.GetAt(distance,name.lexeme);
+        }else{
+            return globals.Get(name);
+        }
     }
 
     public object visitAssignExpr(Expr.Assign expr)
     {
         Object value = Evaluate(expr.value);
+
+        int distance = _locals[expr];
+        if(distance !=null){
+            _environment.AssignAt(distance,expr.name,value);
+        }else{
+            globals.Assign(expr.name,value);
+        }
+
         _environment.Assign(expr.name,value);
         return null;
     }
@@ -350,5 +370,10 @@ public class Interpreter : Expr.IVisitor<Object>, Stmt.IVisitor<Object> {
         if(stmt.value != null) val = Evaluate(stmt.value);
 
         throw new Return(val);
+    }
+
+    internal void Resolve(Expr expr, int depth)
+    {
+        _locals[expr]=depth;
     }
 }

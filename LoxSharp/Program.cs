@@ -73,6 +73,11 @@ public class Lox{
             return;
         }
 
+        Resolver resolver= new Resolver(myInterpreter);
+        resolver.Resolve(stmts);
+
+        if(hadError) return;
+
 
         myInterpreter.Interpret(stmts);
         //Console.WriteLine(new AstPrinter().Print(expression));

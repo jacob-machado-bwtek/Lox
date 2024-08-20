@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "c:\\Users\\4510133\\OneDrive - Metrohm Group\\Documents\\Lox\\LoxSharp\\LoxSharp.csproj": {}
+    "C:\\Users\\4510133\\OneDrive - Metrohm Group\\Documents\\Lox\\LoxSharp\\LoxSharp.csproj": {}
   },
   "projects": {
-    "c:\\Users\\4510133\\OneDrive - Metrohm Group\\Documents\\Lox\\LoxSharp\\LoxSharp.csproj": {
+    "C:\\Users\\4510133\\OneDrive - Metrohm Group\\Documents\\Lox\\LoxSharp\\LoxSharp.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "c:\\Users\\4510133\\OneDrive - Metrohm Group\\Documents\\Lox\\LoxSharp\\LoxSharp.csproj",
+        "projectUniqueName": "C:\\Users\\4510133\\OneDrive - Metrohm Group\\Documents\\Lox\\LoxSharp\\LoxSharp.csproj",
         "projectName": "LoxSharp",
-        "projectPath": "c:\\Users\\4510133\\OneDrive - Metrohm Group\\Documents\\Lox\\LoxSharp\\LoxSharp.csproj",
+        "projectPath": "C:\\Users\\4510133\\OneDrive - Metrohm Group\\Documents\\Lox\\LoxSharp\\LoxSharp.csproj",
         "packagesPath": "C:\\Users\\4510133\\.nuget\\packages\\",
-        "outputPath": "c:\\Users\\4510133\\OneDrive - Metrohm Group\\Documents\\Lox\\LoxSharp\\obj\\",
+        "outputPath": "C:\\Users\\4510133\\OneDrive - Metrohm Group\\Documents\\Lox\\LoxSharp\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files\\DevExpress 22.2\\Components\\Offline Packages",
