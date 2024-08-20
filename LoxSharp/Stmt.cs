@@ -6,8 +6,10 @@ public abstract class Stmt {
 public interface IVisitor<R>{
 		R visitBlockStmt(Block stmt);
 		R visitExpressionStmt(Expression stmt);
+		R visitFunctionStmt(Function stmt);
 		R visitIfStmt(If stmt);
 		R visitPrintStmt(Print stmt);
+		R visitReturnStmt(Return stmt);
 		R visitVarStmt(Var stmt);
 		R visitWhileStmt(While stmt);
 }
@@ -34,6 +36,22 @@ public override  R accept<R>(IVisitor<R> visitor) {
 
 
 	 public Expr expression { get; }
+}
+public class Function : Stmt {
+	 public Function(Token name,List<Token> parameters,List<Stmt> body){
+		this.name = name;
+		this.parameters = parameters;
+		this.body = body;
+	}
+
+public override  R accept<R>(IVisitor<R> visitor) {
+			 return visitor.visitFunctionStmt(this);
+		 }
+
+
+	 public Token name { get; }
+	 public List<Token> parameters { get; }
+	 public List<Stmt> body { get; }
 }
 public class If : Stmt {
 	 public If(Expr condition,Stmt thenBranch,Stmt elseBranch){
@@ -62,6 +80,20 @@ public override  R accept<R>(IVisitor<R> visitor) {
 
 
 	 public Expr expression { get; }
+}
+public class Return : Stmt {
+	 public Return(Token keyword,Expr value){
+		this.keyword = keyword;
+		this.value = value;
+	}
+
+public override  R accept<R>(IVisitor<R> visitor) {
+			 return visitor.visitReturnStmt(this);
+		 }
+
+
+	 public Token keyword { get; }
+	 public Expr value { get; }
 }
 public class Var : Stmt {
 	 public Var(Token name,Expr initializer){

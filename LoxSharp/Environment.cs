@@ -1,6 +1,6 @@
 namespace LoxSharp;
 
-class LoxEnvironment {
+public class LoxEnvironment {
     private readonly Dictionary<string,object> values = new Dictionary<string,object>();
 
     private readonly LoxEnvironment enclosing;

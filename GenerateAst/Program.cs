@@ -20,17 +20,25 @@ namespace LoxSharp.Tools;
             "Unary : Token op,Expr right",
             "Variable : Token name",
         };
-        Console.WriteLine(ExprTypes);
 
+        foreach(string e in ExprTypes){
+            Console.WriteLine(e);
+        }
         List<string> StmtTypes = new List<string>{
             "Block : List<Stmt> statements",
             "Expression : Expr expression",
+            "Function : Token name,List<Token> parameters,List<Stmt> body",
             "If : Expr condition,Stmt thenBranch,Stmt elseBranch", 
             "Print : Expr expression ",
+            "Return : Token keyword,Expr value",
             "Var : Token name,Expr initializer",
             "While : Expr condition,Stmt body",
 
         };
+        
+        foreach(string s in StmtTypes){
+            Console.WriteLine(s);
+        }
         Console.WriteLine(StmtTypes);
 
         DefineAst(outputDir, "Expr", ExprTypes);

@@ -5,7 +5,7 @@ namespace LoxSharp;
 
 public class Interpreter : Expr.IVisitor<Object>, Stmt.IVisitor<Object> {
 
-    readonly LoxEnvironment globals = new LoxEnvironment();
+    public readonly LoxEnvironment globals = new LoxEnvironment();
 
     private LoxEnvironment _environment;
  public Interpreter() {
@@ -262,7 +262,7 @@ public class Interpreter : Expr.IVisitor<Object>, Stmt.IVisitor<Object> {
         return null;
     }
 
-    private void ExecuteBlock(List<Stmt> statements, LoxEnvironment environment)
+    public void ExecuteBlock(List<Stmt> statements, LoxEnvironment environment)
     {
         LoxEnvironment prev = this._environment;
 
@@ -333,5 +333,22 @@ public class Interpreter : Expr.IVisitor<Object>, Stmt.IVisitor<Object> {
         }
 
         return function.Call(this, args);
+    }
+
+    public object visitFunctionStmt(Stmt.Function stmt)
+    {
+        LoxFunction function= new LoxFunction(stmt, _environment);
+
+        _environment.Define(stmt.name.lexeme, function);
+        return null;
+    }
+
+    public object visitReturnStmt(Stmt.Return stmt)
+    {
+        object val = null;
+
+        if(stmt.value != null) val = Evaluate(stmt.value);
+
+        throw new Return(val);
     }
 }
