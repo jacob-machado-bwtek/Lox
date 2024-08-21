@@ -27,8 +27,9 @@ public override  R accept<R>(IVisitor<R> visitor) {
 	 public List<Stmt> statements { get; }
 }
 public class Class : Stmt {
-	 public Class(Token name,List<Stmt.Function> methods){
+	 public Class(Token name,Expr.Variable superclass,List<Stmt.Function> methods){
 		this.name = name;
+		this.superclass = superclass;
 		this.methods = methods;
 	}
 
@@ -38,6 +39,7 @@ public override  R accept<R>(IVisitor<R> visitor) {
 
 
 	 public Token name { get; }
+	 public Expr.Variable superclass { get; }
 	 public List<Stmt.Function> methods { get; }
 }
 public class Expression : Stmt {

@@ -29,7 +29,7 @@ namespace LoxSharp.Tools;
         }
         List<string> StmtTypes = new List<string>{
             "Block : List<Stmt> statements",
-            "Class : Token name,List<Stmt.Function> methods",
+            "Class : Token name,Expr.Variable superclass,List<Stmt.Function> methods",
             "Expression : Expr expression",
             "Function : Token name,List<Token> parameters,List<Stmt> body",
             "If : Expr condition,Stmt thenBranch,Stmt elseBranch", 
