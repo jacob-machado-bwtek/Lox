@@ -15,8 +15,11 @@ namespace LoxSharp.Tools;
             "Binary : Expr left,Token Op,Expr right",
             "Call : Expr callee,Token paren,List<Expr> arguments",
             "Grouping : Expr expression",
+            "Get : Expr obj,Token name",
             "Literal : Object value",
             "Logical : Expr left,Token Op,Expr right",
+            "Set : Expr obj,Token name,Expr value",
+            "This : Token keyword",
             "Unary : Token op,Expr right",
             "Variable : Token name",
         };
@@ -26,6 +29,7 @@ namespace LoxSharp.Tools;
         }
         List<string> StmtTypes = new List<string>{
             "Block : List<Stmt> statements",
+            "Class : Token name,List<Stmt.Function> methods",
             "Expression : Expr expression",
             "Function : Token name,List<Token> parameters,List<Stmt> body",
             "If : Expr condition,Stmt thenBranch,Stmt elseBranch", 

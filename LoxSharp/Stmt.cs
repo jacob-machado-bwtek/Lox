@@ -5,6 +5,7 @@
 public abstract class Stmt {
 public interface IVisitor<R>{
 		R visitBlockStmt(Block stmt);
+		R visitClassStmt(Class stmt);
 		R visitExpressionStmt(Expression stmt);
 		R visitFunctionStmt(Function stmt);
 		R visitIfStmt(If stmt);
@@ -24,6 +25,20 @@ public override  R accept<R>(IVisitor<R> visitor) {
 
 
 	 public List<Stmt> statements { get; }
+}
+public class Class : Stmt {
+	 public Class(Token name,List<Stmt.Function> methods){
+		this.name = name;
+		this.methods = methods;
+	}
+
+public override  R accept<R>(IVisitor<R> visitor) {
+			 return visitor.visitClassStmt(this);
+		 }
+
+
+	 public Token name { get; }
+	 public List<Stmt.Function> methods { get; }
 }
 public class Expression : Stmt {
 	 public Expression(Expr expression){

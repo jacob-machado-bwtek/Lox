@@ -1,3 +1,4 @@
+
 namespace LoxSharp;
 
 public class LoxFunction : ICallable
@@ -6,7 +7,10 @@ public class LoxFunction : ICallable
     private readonly LoxEnvironment closure;
     public int Arity => declaration.parameters.Count;
 
-    public LoxFunction(Stmt.Function declaration, LoxEnvironment closure){
+    public bool isInitializer;
+
+    public LoxFunction(Stmt.Function declaration, LoxEnvironment closure, bool isInitializer){
+        this.isInitializer = isInitializer;
         this.declaration = declaration;
         this.closure = closure;
     }
@@ -23,9 +27,11 @@ public class LoxFunction : ICallable
         try{
             interpreter.ExecuteBlock(declaration.body, env);
         }catch(Return returnValue){
+            if(isInitializer) return closure.GetAt(0, "this");
             return returnValue.Value;
         }
 
+        if(isInitializer) return closure.GetAt(0, "this");
         return null;
     }
 
@@ -33,5 +39,11 @@ public class LoxFunction : ICallable
         return $"<fn {declaration.name.lexeme}>";
     }
 
+    internal LoxFunction Bind(LoxInstance loxInstance)
+    {
+        var env = new LoxEnvironment(closure);
+        env.Define("this", loxInstance);
 
+        return new LoxFunction(declaration, env, isInitializer);
+    }
 }

@@ -8,8 +8,11 @@ public interface IVisitor<R>{
 		R visitBinaryExpr(Binary expr);
 		R visitCallExpr(Call expr);
 		R visitGroupingExpr(Grouping expr);
+		R visitGetExpr(Get expr);
 		R visitLiteralExpr(Literal expr);
 		R visitLogicalExpr(Logical expr);
+		R visitSetExpr(Set expr);
+		R visitThisExpr(This expr);
 		R visitUnaryExpr(Unary expr);
 		R visitVariableExpr(Variable expr);
 }
@@ -71,6 +74,20 @@ public override  R accept<R>(IVisitor<R> visitor) {
 
 	 public Expr expression { get; }
 }
+public class Get : Expr {
+	 public Get(Expr obj,Token name){
+		this.obj = obj;
+		this.name = name;
+	}
+
+public override  R accept<R>(IVisitor<R> visitor) {
+			 return visitor.visitGetExpr(this);
+		 }
+
+
+	 public Expr obj { get; }
+	 public Token name { get; }
+}
 public class Literal : Expr {
 	 public Literal(Object value){
 		this.value = value;
@@ -98,6 +115,34 @@ public override  R accept<R>(IVisitor<R> visitor) {
 	 public Expr left { get; }
 	 public Token Op { get; }
 	 public Expr right { get; }
+}
+public class Set : Expr {
+	 public Set(Expr obj,Token name,Expr value){
+		this.obj = obj;
+		this.name = name;
+		this.value = value;
+	}
+
+public override  R accept<R>(IVisitor<R> visitor) {
+			 return visitor.visitSetExpr(this);
+		 }
+
+
+	 public Expr obj { get; }
+	 public Token name { get; }
+	 public Expr value { get; }
+}
+public class This : Expr {
+	 public This(Token keyword){
+		this.keyword = keyword;
+	}
+
+public override  R accept<R>(IVisitor<R> visitor) {
+			 return visitor.visitThisExpr(this);
+		 }
+
+
+	 public Token keyword { get; }
 }
 public class Unary : Expr {
 	 public Unary(Token op,Expr right){

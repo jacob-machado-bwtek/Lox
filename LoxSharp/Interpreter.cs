@@ -250,7 +250,7 @@ public class Interpreter : Expr.IVisitor<Object>, Stmt.IVisitor<Object> {
         return LookUpVariable(expr.name,expr);
     }
 
-    private object LookUpVariable(Token name, Expr.Variable expr)
+    private object LookUpVariable(Token name, Expr expr)
     {
         int distance = _locals[expr];
 
@@ -357,7 +357,7 @@ public class Interpreter : Expr.IVisitor<Object>, Stmt.IVisitor<Object> {
 
     public object visitFunctionStmt(Stmt.Function stmt)
     {
-        LoxFunction function= new LoxFunction(stmt, _environment);
+        LoxFunction function= new LoxFunction(stmt, _environment, false);
 
         _environment.Define(stmt.name.lexeme, function);
         return null;
@@ -375,5 +375,48 @@ public class Interpreter : Expr.IVisitor<Object>, Stmt.IVisitor<Object> {
     internal void Resolve(Expr expr, int depth)
     {
         _locals[expr]=depth;
+    }
+
+    public object visitClassStmt(Stmt.Class stmt)
+    {
+        _environment.Define(stmt.name.lexeme, null);
+
+        Dictionary<string, LoxFunction> methods = new();
+        foreach(var method in stmt.methods){
+            LoxFunction func = new LoxFunction(method, _environment, method.name.lexeme.Equals("init"));
+        }
+
+        LoxClass klass = new LoxClass(stmt.name.lexeme, methods);
+        _environment.Assign(stmt.name, klass);
+        return null;
+    }
+
+    public object visitGetExpr(Expr.Get expr)
+    {
+        object obj = Evaluate(expr.obj);
+        if(obj is LoxInstance){
+            return (obj as LoxInstance).Get(expr.name);
+        }
+
+        throw new RuntimeError(expr.name,"Only instances have properties");
+    }
+
+    public object visitSetExpr(Expr.Set expr)
+    {
+        object obj = Evaluate(expr.obj);
+
+        if(obj is not LoxInstance){
+            throw new  RuntimeError(expr.name,"Only instances have fields");
+        }
+
+        object value = Evaluate(expr.value);
+        (obj as LoxInstance).Set(expr.name,value);
+
+        return value;
+    }
+
+    public object visitThisExpr(Expr.This expr)
+    {
+        return LookUpVariable(expr.keyword, expr);
     }
 }
