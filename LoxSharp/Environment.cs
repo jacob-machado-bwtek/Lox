@@ -3,7 +3,7 @@ namespace LoxSharp;
 public class LoxEnvironment {
     private readonly Dictionary<string,object> values = new Dictionary<string,object>();
 
-    private readonly LoxEnvironment enclosing;
+    public readonly LoxEnvironment enclosing;
 
     public LoxEnvironment(){
         enclosing = null;

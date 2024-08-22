@@ -12,6 +12,7 @@ public interface IVisitor<R>{
 		R visitLiteralExpr(Literal expr);
 		R visitLogicalExpr(Logical expr);
 		R visitSetExpr(Set expr);
+		R visitSuperExpr(Super expr);
 		R visitThisExpr(This expr);
 		R visitUnaryExpr(Unary expr);
 		R visitVariableExpr(Variable expr);
@@ -131,6 +132,20 @@ public override  R accept<R>(IVisitor<R> visitor) {
 	 public Expr obj { get; }
 	 public Token name { get; }
 	 public Expr value { get; }
+}
+public class Super : Expr {
+	 public Super(Token keyword,Token method){
+		this.keyword = keyword;
+		this.method = method;
+	}
+
+public override  R accept<R>(IVisitor<R> visitor) {
+			 return visitor.visitSuperExpr(this);
+		 }
+
+
+	 public Token keyword { get; }
+	 public Token method { get; }
 }
 public class This : Expr {
 	 public This(Token keyword){

@@ -238,6 +238,20 @@ public class Resolver : Expr.IVisitor<object>, Stmt.IVisitor<object>
         Declare(stmt.name);
         Define(stmt.name);
 
+        if(stmt.superclass != null && stmt.name.lexeme.Equals(stmt.name.lexeme)){
+            Lox.Error(stmt.superclass.name, "A class cant inherit from itself");
+        }
+
+        if(stmt.superclass != null){
+            currentClass = ClassType.SUBCLASS;
+            Resolve(stmt.superclass);
+        }
+
+        if(stmt.superclass != null){
+            BeginScope();
+            _scopes.Peek()["super"] = true;
+        }
+
 
         BeginScope();
         _scopes.Peek()["this"] = true;
@@ -254,6 +268,8 @@ public class Resolver : Expr.IVisitor<object>, Stmt.IVisitor<object>
         }
 
         EndScope();
+
+        if(stmt.superclass != null) EndScope();
 
         currentClass = enclosingClass;
         return null;
@@ -284,10 +300,23 @@ public class Resolver : Expr.IVisitor<object>, Stmt.IVisitor<object>
         return null;
     }
 
+    public object visitSuperExpr(Expr.Super expr)
+    {
+        if(currentClass == ClassType.NONE){
+            Lox.Error(expr.keyword,"can't use 'super' outside of a class.");
+        }else if(currentClass != ClassType.SUBCLASS){
+            Lox.Error(expr.keyword,"Can't use 'super' in a class with no superclass.");
+        }
+
+        resolveLocal(expr, expr.keyword);
+        return null;
+    }
+
     private enum ClassType
     {
         NONE,
         CLASS,
+        SUBCLASS
     }
 }
 
