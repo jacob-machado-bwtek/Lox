@@ -1,10 +1,12 @@
-
-pub enum OpCode {
-    Return, 
+#[derive(Debug)]
+pub enum Opcode {
+    OpConstant,
+    OpReturn,
+     
 }
 
 pub struct Chunk{
-    pub code: Vec<OpCode>,
+    pub code: Vec<Opcode>,
 }
 
 impl Chunk {
@@ -14,7 +16,7 @@ impl Chunk {
         }
     }
 
-    pub fn write_chunk(&mut self, code: OpCode){
+    pub fn write_chunk(&mut self, code: Opcode){
         self.code.push(code)
     }
 }
