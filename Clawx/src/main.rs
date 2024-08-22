@@ -1,4 +1,6 @@
+use std::process::ExitCode;
 
-fn main() {
-    println!("Hello world clawx")
+mod chunk;
+fn main() -> ExitCode{
+   ExitCode::SUCCESS
 }

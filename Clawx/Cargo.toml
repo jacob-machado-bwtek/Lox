@@ -1,6 +1,7 @@
 [package]
-name = "Clawx"
+name = "clawx"
 version = "0.1.0"
 edition = "2021"
+authors = ["Jacob Machado"]
 
 [dependencies]
