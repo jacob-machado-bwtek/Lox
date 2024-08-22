@@ -1,6 +1,8 @@
-/rlox/target/*
+/clawx/target/*
 /LoxSharp/bin/*
 /LoxSharp/obj/Debug/*
 /GenerateAst/bin/*
 /GenerateAst/obj/Debug/*
 /obj/Debug/*
+
+clawx\target\*
