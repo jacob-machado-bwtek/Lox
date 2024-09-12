@@ -1,17 +1,14 @@
-use std::{process::ExitCode, vec};
-use std::fmt::Write;
+use crate::chunk::{Line, OpCode};
 
-use chunk::Opcode;
-use disassembler::disassemble_chunk;
-
-mod value;
 mod chunk;
-mod disassembler;
-fn main() -> ExitCode{
-   let mut mychunk = chunk::Chunk::new_chunk();
-   mychunk.write_chunk(chunk::Opcode::OpConstant(1.2345), 143);
-   mychunk.write_chunk(Opcode::OpReturn,123);
+mod value;
 
-   let myresult =  disassemble_chunk(mychunk, &"Test Chunk");
-   ExitCode::SUCCESS
+fn main() {
+    let mut chunk = chunk::Chunk::new("test chunk");
+
+    let constant_index = chunk.add_constant(1.23);
+   chunk.write(OpCode::Constant, Line(12345));
+   chunk.write(*constant_index, Line(12345));
+   chunk.write(OpCode::Return, Line(12345));
+    println!("{:?}", chunk);
 }

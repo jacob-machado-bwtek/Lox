@@ -5,3 +5,5 @@ edition = "2021"
 authors = ["Jacob Machado"]
 
 [dependencies]
+num_enum = "0.5.7"
+shrinkwraprs = "0.3.0"
