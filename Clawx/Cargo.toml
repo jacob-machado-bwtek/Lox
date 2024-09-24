@@ -8,6 +8,7 @@ authors = ["Jacob Machado"]
 num_enum = "0.5.7"
 shrinkwraprs = "0.3.0"
 thiserror = "1.0.37"
+itertools = "0.10.5"
 
 [features]
 trace_execution = []
