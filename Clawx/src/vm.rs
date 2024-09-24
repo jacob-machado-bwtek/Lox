@@ -3,8 +3,8 @@ use std::slice;
 use thiserror::Error;
 
 use crate::{
-    chunk::{Chunk, OpCode, InstructionDisassembler},
-    value::Value,
+    chunk::{Chunk, InstructionDisassembler, OpCode},
+    value::{self, Value},
 };
 
 
@@ -17,6 +17,7 @@ type Result<T = (), E = Error> = std::result::Result<T, E>;
 pub struct VM<'a> {
     chunk: Option<&'a Chunk>,
     ip: std::iter::Enumerate<slice::Iter<'a,u8>>,
+    stack: Vec<Value>,
 }
 
 impl<'a> VM<'a> {
@@ -25,6 +26,7 @@ impl<'a> VM<'a> {
         Self { 
             chunk: None,
             ip: [].iter().enumerate(), 
+            stack: Vec::with_capacity(256),
         }
     }
 
@@ -44,26 +46,36 @@ impl<'a> VM<'a> {
 
             #[cfg(feature = "trace_execution")]
             {
-                *disassember.offset = offset;
+                *disassember.offset = offset;                
+                println!("       {:?}", self.stack);
                 print!("{:?}", disassembler);
             }
 
-            match OpCode::try_from(*instruction) {
-                Err(_) => panic!("Internal error: unrecognized opcode {}", instruction),
-                Ok(OpCode::Return) => return Ok(()),
-                Ok(OpCode::Constant)=> {
-                    println!("{}",self.read_constant(false));
-                },
-                Ok(OpCode::ConstantLong) => {
-                    println!("{}",self.read_constant(true));
+            match OpCode::try_from(*instruction).expect("Internal error: unrecognized OpCode") {
+                OpCode::Return => {
+                    println!("{}", self.stack.pop().expect("Stack Underflow"));
+                    return Ok(());
                 }
-
-                #[allow(unreachable_patterns)]
-                _ => {}
+                OpCode::Constant => {
+                    let value = self.read_constant(false);
+                    self.stack.push(value);
+                },
+                OpCode::ConstantLong => {
+                    let value = self.read_constant(true);
+                    self.stack.push(value);
+                }
+                OpCode::Negate => {
+                    let value = -self.stack.pop().unwrap();
+                    self.stack.push(value);
+                }
+                OpCode::Add => self.binary_op(|a,b| a + b),
+                OpCode::Subtract => self.binary_op(|a,b| a - b),
+                OpCode::Multiply => self.binary_op(|a,b| a * b),
+                OpCode::Divide => self.binary_op(|a,b| a / b),
             };
         }
     }
-    
+
     fn read_constant(&mut self, long: bool) -> Value {
         let index = if long {
             (usize::from(self.read_byte("read_constant/long/0")) << 16)
@@ -79,5 +91,14 @@ impl<'a> VM<'a> {
     fn read_byte(&mut self, msg: &str) -> u8 {
         *self.ip.next().expect(msg).1
     }
+    
+    fn binary_op(&mut self, op: fn(Value, Value) -> Value) {
+        let b = self.stack.pop().expect("stack underflow in binary_op");
+        let a = self.stack.pop().expect("stack underflow in binary_op");
+
+        self.stack.push(op(a,b));//result of op is what is pushed onto stack btw, op is a fn
+    }
+
+    
 
 }
