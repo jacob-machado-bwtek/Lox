@@ -94,9 +94,9 @@ impl<'a> VM<'a> {
     
     fn binary_op(&mut self, op: fn(Value, Value) -> Value) {
         let b = self.stack.pop().expect("stack underflow in binary_op");
-        let a = self.stack.pop().expect("stack underflow in binary_op");
+        let a = self.stack.last_mut().expect("stack underflow in binary_op");
 
-        self.stack.push(op(a,b));//result of op is what is pushed onto stack btw, op is a fn
+        *a = op(*a,b)//since a is the first operand, just put the result of the op into a. 
     }
 
     
