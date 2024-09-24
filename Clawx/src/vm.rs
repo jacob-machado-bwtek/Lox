@@ -3,8 +3,8 @@ use std::slice;
 use thiserror::Error;
 
 use crate::{
-    chunk::{Chunk, InstructionDisassembler, OpCode},
-    value::{self, Value},
+    chunk::{Chunk, OpCode},
+    value::{Value},
     compiler::compile,
 };
 

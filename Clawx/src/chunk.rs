@@ -1,4 +1,3 @@
-use std::fmt::write;
 
 use num_enum::{IntoPrimitive, TryFromPrimitive};
 use shrinkwraprs::Shrinkwrap;
