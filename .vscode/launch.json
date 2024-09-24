@@ -16,9 +16,9 @@
             "type": "lldb",
             "request": "launch",
             "name": "Rlox",
-            "program": "${workspaceFolder}/rlox/target/debug/rlox.exe",
+            "program": "${workspaceFolder}/clawx/target/debug/clawx.exe",
             "args": [],
-            "cwd": "${workspaceFolder}/rlox"
+            "cwd": "${workspaceFolder}/clawx"
         },
         {
             "type": "coreclr",

@@ -1,14 +1,12 @@
 use std::fmt::write;
 
-use crate::value::Value;
-
 use num_enum::{IntoPrimitive, TryFromPrimitive};
 use shrinkwraprs::Shrinkwrap;
 
 
 
-#[derive(Shrinkwrap, PartialEq, Eq, Clone, Copy)]
-pub struct Line(pub usize);
+use crate::{types::Line, value::Value};
+
 
 #[derive(Shrinkwrap)]
 #[shrinkwrap(mutable)]

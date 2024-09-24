@@ -6,3 +6,8 @@
 /obj/Debug/*
 
 \clawx\target\*
+Clawx/target/debug/clawx.d
+Clawx/target/debug/clawx.exe
+Clawx/target/debug/clawx.pdb
+Clawx/target/debug/.fingerprint/clawx-16996c4d3be13c55/dep-bin-clawx
+Clawx/target/debug/deps/clawx.d
