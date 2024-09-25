@@ -1,60 +1,54 @@
 use std::slice;
 
-use thiserror::Error;
 
 use crate::{
-    chunk::{Chunk, OpCode},
-    value::{Value},
-    compiler::compile,
+    chunk::{self, Chunk, OpCode}, compiler::Compiler, value::Value
 };
 
-
-#[derive(Error, Debug)]
-pub enum Error {
-    #[error("Runtime error In VM")]
+#[derive(Debug, PartialEq, Eq)]
+#[repr(u8)]
+pub enum InterpretResult {
+    Ok,
+    CompileError,
     RuntimeError,
-
-    #[error(transparent)]
-    CompileError(#[from] crate::compiler::Error),
 }
 
 
-pub type Result<T = (), E = Error> = std::result::Result<T, E>;
-
-pub struct VM<'a> {
-    chunk: Option<&'a Chunk>,
-    ip: std::iter::Enumerate<slice::Iter<'a,u8>>,
+pub struct VM {
+    chunk: Option<Chunk>,
+    ip: usize,
     stack: Vec<Value>,
 }
 
-impl<'a> VM<'a> {
+impl VM {
     #[must_use]
     pub fn new() -> Self{
         Self { 
             chunk: None,
-            ip: [].iter().enumerate(), 
+            ip: 0, 
             stack: Vec::with_capacity(256),
         }
     }
 
-    pub fn interpret(&mut self, source: &[u8]) -> Result {
-        compile(source).map_err(Error::CompileError)
+    pub fn interpret(&mut self, source: &[u8]) -> InterpretResult {
+        if let Some(chunk) = Compiler::compile(source) {
+            self.chunk = Some(chunk);
+            self.ip = 0;
+            self.run()
+        } else {
+            InterpretResult::CompileError
+        }
     }
 
-    fn _interpret(&mut self, chunk: &'a Chunk) -> Result {
-        self.chunk = Some(chunk);
-        self.ip = chunk.code().iter().enumerate();
-        self.run()
-    }
+
     
-    fn run(&mut self) -> Result {
+    fn run(&mut self) -> InterpretResult {
         #[cfg(feature = "trace_execution")]
         let mut disassembler = instructionDisassembler::new(self.chunk.unwrap());
 
         loop{
             #[allow(unused_variables)]
-            let (offset, instruction) = self.ip.next().expect("Internal error: ran out of instructions");
-
+            let instruction = self.chunk.as_ref().unwrap().code()[self.ip];
             #[cfg(feature = "trace_execution")]
             {
                 *disassember.offset = offset;                
@@ -62,10 +56,10 @@ impl<'a> VM<'a> {
                 print!("{:?}", disassembler);
             }
 
-            match OpCode::try_from(*instruction).expect("Internal error: unrecognized OpCode") {
+            match OpCode::try_from(instruction).expect("Internal error: unrecognized OpCode") {
                 OpCode::Return => {
                     println!("{}", self.stack.pop().expect("Stack Underflow"));
-                    return Ok(());
+                    return InterpretResult::Ok;
                 }
                 OpCode::Constant => {
                     let value = self.read_constant(false);
@@ -95,12 +89,13 @@ impl<'a> VM<'a> {
         } else {
             usize::from(self.read_byte("read_constant"))
         };
-        self.chunk.unwrap().get_constant(index)
+        self.chunk.as_ref().unwrap().get_constant(index)
 
     }
     
     fn read_byte(&mut self, msg: &str) -> u8 {
-        *self.ip.next().expect(msg).1
+        self.ip += 1;
+        *self.get_byte(self.ip).expect(msg)
     }
     
     fn binary_op(&mut self, op: fn(Value, Value) -> Value) {
@@ -108,6 +103,10 @@ impl<'a> VM<'a> {
         let a = self.stack.last_mut().expect("stack underflow in binary_op");
 
         *a = op(*a,b)//since a is the first operand, just put the result of the op into a. 
+    }
+    
+    fn get_byte(&self, index : usize) -> Option<&u8> {
+        self.chunk.as_ref().unwrap().code().get(index)
     }
 
     
