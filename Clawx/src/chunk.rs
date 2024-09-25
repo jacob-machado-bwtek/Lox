@@ -74,7 +74,7 @@ impl Chunk {
         }
     }
 
-    pub fn write_constant(&mut self, what: Value, line: Line){
+    pub fn write_constant(&mut self, what: Value, line: Line) -> bool{
         self.constants.push(what);
         
         let long_index = self.constants.len() -1;
@@ -87,11 +87,13 @@ impl Chunk {
             let (a,b,c,d) = crate::bitwise::get_4_bytes(long_index);
             if a > 0 {
                 panic!("whoah thats tooooo many constants my man");
+                return false;
             }
             self.write(b, line);
             self.write(c, line);
             self.write(d, line);
         }
+        return true;
     }
 
     pub fn code(&self) -> &[u8] {
