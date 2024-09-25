@@ -1,3 +1,7 @@
+use std::ops::Add;
+
+use num_enum::{IntoPrimitive, TryFromPrimitive};
+
 
 use crate::{
     chunk::{self, Chunk, OpCode},
@@ -7,7 +11,8 @@ use crate::{
 };
 
 
-#[derive(Debug, PartialEq, Eq, PartialOrd, Ord)]
+#[derive(Debug, PartialEq, Eq, PartialOrd, Ord, TryFromPrimitive, IntoPrimitive)]
+#[repr(u8)]
 enum Precedence {
     None,
     Assignment,
@@ -21,6 +26,10 @@ enum Precedence {
     Call,
     Primary,
 
+}
+
+struct Rule {
+    precedence: Precedence,
 }
 
 pub struct Compiler<'a> {
@@ -173,8 +182,32 @@ impl<'a> Compiler<'a> {
             _ => unreachable!("unary but not negation??: {}", operator),
         }
     }
+
+    fn binary(&mut self) {
+        let operator = &self.previous.as_ref().unwrap().kind;
+        let line = self.line();
+        let rule = self.get_rule(operator);
+
+        self.parse_precedence(
+            Precedence::try_from_primitive(u8::from(rule.precedence) +1).unwrap()
+        );
+
+        match operator {
+            TokenKind::Plus  => self.emit_byte(OpCode::Add, line),
+            TokenKind::Minus => self.emit_byte(OpCode::Subtract, line),
+            TokenKind::Star  => self.emit_byte(OpCode::Multiply, line),
+            TokenKind::Slash => self.emit_byte(OpCode::Divide, line),
+
+            _ => unreachable!("unkown binary op, how did u do this: {}",operator),
+        }
+
+    }
     
     fn parse_precedence(&self, precedence: Precedence) {
+        todo!()
+    }
+    
+    fn get_rule(&self, operator: &TokenKind) -> Rule {
         todo!()
     }
 
